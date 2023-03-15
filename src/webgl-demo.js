@@ -3,7 +3,6 @@ import { drawScene } from "./draw-scene.js";
 
 main();
 
-let squareRotation = 0.0;
 let deltaTime = 0;
 let cubeRotation = 0.0;
 
@@ -12,20 +11,20 @@ let cubeRotation = 0.0;
 //
 function main() {
   // Vertex shader program
-
   const vsSource = `
-attribute vec4 aVertexPosition;
-attribute vec4 aVertexColor;
+    attribute vec4 aVertexPosition;
+    attribute vec4 aVertexColor;
 
-uniform mat4 uModelViewMatrix;
-uniform mat4 uProjectionMatrix;
+    uniform mat4 uModelViewMatrix;
+    uniform mat4 uProjectionMatrix;
 
-varying lowp vec4 vColor;
+    varying lowp vec4 vColor;
 
-void main(void) {
-  gl_Position = uProjectionMatrix * uModelViewMatrix * aVertexPosition;
-  vColor = aVertexColor;
-}`;
+    void main(void) {
+      gl_Position = uProjectionMatrix * uModelViewMatrix * aVertexPosition;
+      vColor = aVertexColor;
+    }
+  `;
   const fsSource = `
     varying lowp vec4 vColor;
 
@@ -34,6 +33,7 @@ void main(void) {
     }
   `;
   const canvas = document.querySelector("#glcanvas");
+
   // Initialize the GL context
   const gl = canvas.getContext("webgl");
 

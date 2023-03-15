@@ -1,6 +1,18 @@
-import { createProgram, degToRad, radToDeg } from "./utils.js";
+import { degToRad, radToDeg } from "./utils.js";
 import { setupSlider } from "./ui.js";
 import { drawScene } from "./draw-scene.js";
+import { initBuffers } from "./init-buffers.js";
+import { createProgram } from "./program.js";
+const positions = [
+  // left column front
+  0, 0, 0, 30, 0, 0, 0, 150, 0, 0, 150, 0, 30, 0, 0, 30, 150, 0,
+];
+
+const colors = [
+  // left column front
+  200, 70, 120, 200, 70, 120, 200, 70, 120, 200, 70, 120, 200, 70, 120, 200, 70, 120,
+];
+
 function main() {
   let canvas = document.querySelector("#canvas");
   let gl = canvas.getContext("webgl");
@@ -11,34 +23,18 @@ function main() {
 
   // setup GLSL program
   let program = createProgram(gl);
+  const buffers = initBuffers(gl, positions, colors);
 
-  // Create a buffer to put positions in
-  let positionBuffer = gl.createBuffer();
-  // Bind it to ARRAY_BUFFER (think of it as ARRAY_BUFFER = positionBuffer)
-  gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
-  // Put geometry data into buffer
-  setGeometry(gl);
-
-  // Create a buffer to put colors in
-  let colorBuffer = gl.createBuffer();
-  // Bind it to ARRAY_BUFFER (think of it as ARRAY_BUFFER = colorBuffer)
-  gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
-  // Put geometry data into buffer
-  setColors(gl);
-
-  const buffers = {
-    positionBuffer,
-    colorBuffer,
-  };
-
-  let translation = [45, 150, 0];
   let rotation = [degToRad(40), degToRad(25), degToRad(325)];
+  let translation = [45, 150, 0];
   let scale = [1, 1, 1];
+
   let objectsConditions = {
     rotation,
     translation,
     scale,
   };
+
   drawScene(gl, program, buffers, objectsConditions);
 
   // Setup a ui.
@@ -84,24 +80,6 @@ function main() {
       drawScene(gl, program, buffers, objectsConditions);
     };
   }
-}
-
-const cube = [
-  // left column front
-  0, 0, 0, 30, 0, 0, 0, 150, 0, 0, 150, 0, 30, 0, 0, 30, 150, 0,
-];
-function setGeometry(gl) {
-  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(cube), gl.STATIC_DRAW);
-}
-function setColors(gl) {
-  gl.bufferData(
-    gl.ARRAY_BUFFER,
-    new Uint8Array([
-      // left column front
-      200, 70, 120, 200, 70, 120, 200, 70, 120, 200, 70, 120, 200, 70, 120, 200, 70, 120,
-    ]),
-    gl.STATIC_DRAW
-  );
 }
 
 main();

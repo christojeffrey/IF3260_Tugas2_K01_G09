@@ -54,17 +54,9 @@ function loadShader(gl, shaderSource, shaderType, opt_errorCallback) {
   return shader;
 }
 import { vSource, fSource } from "./source.js";
-
-function createVertexShader(gl, opt_errorCallback) {
-  return loadShader(gl, vSource, gl.VERTEX_SHADER, opt_errorCallback);
-}
-function createFragmentShader(gl, opt_errorCallback) {
-  return loadShader(gl, fSource, gl.FRAGMENT_SHADER, opt_errorCallback);
-}
-
 function createProgram(gl, opt_attribs, opt_locations, opt_errorCallback) {
-  const vShader = createVertexShader(gl, opt_errorCallback);
-  const fShader = createFragmentShader(gl, opt_errorCallback);
+  const vShader = loadShader(gl, vSource, gl.VERTEX_SHADER, opt_errorCallback);
+  const fShader = loadShader(gl, fSource, gl.FRAGMENT_SHADER, opt_errorCallback);
 
   const shaders = [vShader, fShader];
   const errFn = opt_errorCallback || error;

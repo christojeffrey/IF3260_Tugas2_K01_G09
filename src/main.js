@@ -6,15 +6,20 @@ import { createProgram } from "./program.js";
 import { Point, Rectangle } from "./class.js";
 
 // defining
+// POINTS ORDER MATTERS
 const cube = [
   // front
-  new Rectangle(new Point(0, 0, 0), new Point(30, 0, 0), new Point(30, 150, 0), new Point(0, 150, 0)),
+  new Rectangle(new Point(0, 0, 0), new Point(0, 150, 0), new Point(30, 150, 0), new Point(30, 0, 0)),
   // first side
   new Rectangle(new Point(0, 0, 0), new Point(0, 0, 30), new Point(0, 150, 30), new Point(0, 150, 0)),
   // second side
-  new Rectangle(new Point(30, 0, 0), new Point(30, 0, 30), new Point(30, 150, 30), new Point(30, 150, 0)),
+  new Rectangle(new Point(30, 0, 0), new Point(30, 150, 0), new Point(30, 150, 30), new Point(30, 0, 30)),
   // third side
   new Rectangle(new Point(0, 0, 30), new Point(30, 0, 30), new Point(30, 150, 30), new Point(0, 150, 30)),
+  // top
+  new Rectangle(new Point(0, 150, 0), new Point(0, 150, 30), new Point(30, 150, 30), new Point(30, 150, 0)),
+  // bottom
+  new Rectangle(new Point(0, 0, 0), new Point(30, 0, 0), new Point(30, 0, 30), new Point(0, 0, 30)),
 ];
 const cubeLength = cube.length;
 let positions = [];
@@ -25,12 +30,19 @@ for (let i = 0; i < cubeLength; i++) {
 
 console.log(positions);
 
-const primaryColor = [200, 70, 120];
+const primaryColor = [
+  [200, 70, 120],
+  [0, 0, 0],
+  [0, 100, 0],
+  [0, 100, 100],
+  [100, 0, 100],
+  [100, 100, 0],
+];
 
 const colors = [];
 for (let i = 0; i < cubeLength; i++) {
   for (let j = 0; j < cube[i].totalDrawnPoints(); j++) {
-    colors.push(...primaryColor);
+    colors.push(...primaryColor[i]);
   }
 }
 
@@ -43,6 +55,8 @@ function main() {
     window.alert("No WebGL");
     return;
   }
+
+  // set canvas size
 
   // setup GLSL program
   let program = createProgram(gl);

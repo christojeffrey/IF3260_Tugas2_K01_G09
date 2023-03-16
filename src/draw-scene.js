@@ -1,8 +1,10 @@
 import { m4 } from "./m4.js";
-import { resizeCanvasToDisplaySize, degToRad, radToDeg } from "./utils.js";
+import { resizeCanvasToDisplaySize } from "./utils.js";
 
 // Draw the scene.
 function drawScene(gl, program, buffers, objectsConditions) {
+  // Clear the canvas.
+  gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
   const { scale, rotation, translation } = objectsConditions;
 
   const { positionBuffer, colorBuffer } = buffers;
@@ -16,9 +18,6 @@ function drawScene(gl, program, buffers, objectsConditions) {
 
   // Tell WebGL how to convert from clip space to pixels
   gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
-
-  // Clear the canvas.
-  gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
   // Turn on culling. By default backfacing triangles
   // will be culled.

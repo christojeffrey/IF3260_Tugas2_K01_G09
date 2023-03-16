@@ -3,15 +3,38 @@ import { setupSlider } from "./ui.js";
 import { drawScene } from "./draw-scene.js";
 import { initBuffers } from "./init-buffers.js";
 import { createProgram } from "./program.js";
-const positions = [
-  // left column front
-  0, 0, 0, 30, 0, 0, 0, 150, 0, 0, 150, 0, 30, 0, 0, 30, 150, 0,
-];
+import { Point, Rectangle } from "./class.js";
 
-const colors = [
-  // left column front
-  200, 70, 120, 200, 70, 120, 200, 70, 120, 200, 70, 120, 200, 70, 120, 200, 70, 120,
+// defining
+const cube = [
+  // front
+  new Rectangle(new Point(0, 0, 0), new Point(30, 0, 0), new Point(30, 150, 0), new Point(0, 150, 0)),
+  // first side
+  new Rectangle(new Point(0, 0, 0), new Point(0, 0, 30), new Point(0, 150, 30), new Point(0, 150, 0)),
+  // second side
+  new Rectangle(new Point(30, 0, 0), new Point(30, 0, 30), new Point(30, 150, 30), new Point(30, 150, 0)),
+  // third side
+  new Rectangle(new Point(0, 0, 30), new Point(30, 0, 30), new Point(30, 150, 30), new Point(0, 150, 30)),
 ];
+const cubeLength = cube.length;
+let positions = [];
+for (let i = 0; i < cubeLength; i++) {
+  // turn cube into triangles
+  positions = [...positions, ...cube[i].flattenToTriangles()];
+}
+
+console.log(positions);
+
+const primaryColor = [200, 70, 120];
+
+const colors = [];
+for (let i = 0; i < cubeLength; i++) {
+  for (let j = 0; j < cube[i].totalDrawnPoints(); j++) {
+    colors.push(...primaryColor);
+  }
+}
+
+// at this point, the program now what to draw from the positions and colors arrays. only these two arrays matter for the program to draw the cube.
 
 function main() {
   let canvas = document.querySelector("#canvas");
@@ -25,7 +48,7 @@ function main() {
   let program = createProgram(gl);
   const buffers = initBuffers(gl, positions, colors);
 
-  let rotation = [degToRad(40), degToRad(25), degToRad(325)];
+  let rotation = [degToRad(0), degToRad(200), degToRad(50)];
   let translation = [45, 150, 0];
   let scale = [1, 1, 1];
 
@@ -63,7 +86,7 @@ function main() {
   function updateRotation(index) {
     return function (event, ui) {
       var angleInDegrees = ui.value;
-      var angleInRadians = (angleInDegrees * Math.PI) / 180;
+      var angleInRadians = degToRad(angleInDegrees);
       rotation[index] = angleInRadians;
       const objectsConditions = {
         rotation,

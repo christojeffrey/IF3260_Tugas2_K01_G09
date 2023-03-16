@@ -7,42 +7,225 @@ import { Point, Rectangle } from "./class.js";
 
 // defining
 // POINTS ORDER MATTERS
-const cube = [
-  // front
-  new Rectangle(new Point(0, 0, 0), new Point(0, 150, 0), new Point(30, 150, 0), new Point(30, 0, 0)),
-  // first side
-  new Rectangle(new Point(0, 0, 0), new Point(0, 0, 30), new Point(0, 150, 30), new Point(0, 150, 0)),
-  // second side
-  new Rectangle(new Point(30, 0, 0), new Point(30, 150, 0), new Point(30, 150, 30), new Point(30, 0, 30)),
-  // third side
-  new Rectangle(new Point(0, 0, 30), new Point(30, 0, 30), new Point(30, 150, 30), new Point(0, 150, 30)),
-  // top
-  new Rectangle(new Point(0, 150, 0), new Point(0, 150, 30), new Point(30, 150, 30), new Point(30, 150, 0)),
-  // bottom
-  new Rectangle(new Point(0, 0, 0), new Point(30, 0, 0), new Point(30, 0, 30), new Point(0, 0, 30)),
+let tessaract = [];
+const pillarPoints = [
+  // consist of 8 points
+  [-20, 0, -20],
+  [-20, 400, -20],
+  [20, 400, -20],
+  [20, 0, -20],
+  [-20, 0, 20],
+  [20, 0, 20],
+  [20, 400, 20],
+  [-20, 400, 20],
 ];
-const cubeLength = cube.length;
+// create outterPillar1 from pillarPoints
+
+const outterPillar1 = [
+  // front
+  new Rectangle(new Point(...pillarPoints[0]), new Point(...pillarPoints[1]), new Point(...pillarPoints[2]), new Point(...pillarPoints[3])),
+  // right
+  new Rectangle(new Point(...pillarPoints[3]), new Point(...pillarPoints[2]), new Point(...pillarPoints[6]), new Point(...pillarPoints[5])),
+  // back
+  new Rectangle(new Point(...pillarPoints[5]), new Point(...pillarPoints[6]), new Point(...pillarPoints[7]), new Point(...pillarPoints[4])),
+  // left
+  new Rectangle(
+    new Point(...pillarPoints[4]),
+    new Point(...pillarPoints[7]),
+
+    new Point(...pillarPoints[1]),
+    new Point(...pillarPoints[0])
+  ),
+  // top
+  new Rectangle(new Point(...pillarPoints[1]), new Point(...pillarPoints[7]), new Point(...pillarPoints[6]), new Point(...pillarPoints[2])),
+  // bottom
+  new Rectangle(new Point(...pillarPoints[0]), new Point(...pillarPoints[3]), new Point(...pillarPoints[5]), new Point(...pillarPoints[4])),
+];
+
+tessaract = tessaract.concat(outterPillar1);
+const outterPilar2 = outterPillar1.map((rectangle) => {
+  return new Rectangle(
+    new Point(rectangle.firstPoint.x + 400, rectangle.firstPoint.y, rectangle.firstPoint.z),
+    new Point(rectangle.secondPoint.x + 400, rectangle.secondPoint.y, rectangle.secondPoint.z),
+    new Point(rectangle.thirdPoint.x + 400, rectangle.thirdPoint.y, rectangle.thirdPoint.z),
+    new Point(rectangle.fourthPoint.x + 400, rectangle.fourthPoint.y, rectangle.fourthPoint.z)
+  );
+});
+tessaract = tessaract.concat(outterPilar2);
+const outterPilar3 = outterPillar1.map((rectangle) => {
+  return new Rectangle(
+    new Point(rectangle.firstPoint.x, rectangle.firstPoint.y, rectangle.firstPoint.z + 400),
+    new Point(rectangle.secondPoint.x, rectangle.secondPoint.y, rectangle.secondPoint.z + 400),
+    new Point(rectangle.thirdPoint.x, rectangle.thirdPoint.y, rectangle.thirdPoint.z + 400),
+    new Point(rectangle.fourthPoint.x, rectangle.fourthPoint.y, rectangle.fourthPoint.z + 400)
+  );
+});
+
+tessaract = tessaract.concat(outterPilar3);
+const outterPilar4 = outterPillar1.map((rectangle) => {
+  return new Rectangle(
+    new Point(rectangle.firstPoint.x + 400, rectangle.firstPoint.y, rectangle.firstPoint.z + 400),
+    new Point(rectangle.secondPoint.x + 400, rectangle.secondPoint.y, rectangle.secondPoint.z + 400),
+    new Point(rectangle.thirdPoint.x + 400, rectangle.thirdPoint.y, rectangle.thirdPoint.z + 400),
+    new Point(rectangle.fourthPoint.x + 400, rectangle.fourthPoint.y, rectangle.fourthPoint.z + 400)
+  );
+});
+
+tessaract = tessaract.concat(outterPilar4);
+const horizontalOutterPillarPoints = [
+  // consist of 8 points
+  [0, 0, -20],
+  [0, 30, -20],
+  [400, 30, -20],
+  [400, 0, -20],
+  [0, 0, 20],
+  [400, 0, 20],
+  [400, 30, 20],
+  [0, 30, 20],
+];
+// create outterPillar1 from pillarPoints
+
+const horizontalOutterPillar1 = [
+  // front
+  new Rectangle(new Point(...horizontalOutterPillarPoints[0]), new Point(...horizontalOutterPillarPoints[1]), new Point(...horizontalOutterPillarPoints[2]), new Point(...horizontalOutterPillarPoints[3])),
+  // right
+  new Rectangle(new Point(...horizontalOutterPillarPoints[3]), new Point(...horizontalOutterPillarPoints[2]), new Point(...horizontalOutterPillarPoints[6]), new Point(...horizontalOutterPillarPoints[5])),
+  // back
+  new Rectangle(new Point(...horizontalOutterPillarPoints[5]), new Point(...horizontalOutterPillarPoints[6]), new Point(...horizontalOutterPillarPoints[7]), new Point(...horizontalOutterPillarPoints[4])),
+  // left
+  new Rectangle(
+    new Point(...horizontalOutterPillarPoints[4]),
+    new Point(...horizontalOutterPillarPoints[7]),
+
+    new Point(...horizontalOutterPillarPoints[1]),
+    new Point(...horizontalOutterPillarPoints[0])
+  ),
+  // top
+  new Rectangle(new Point(...horizontalOutterPillarPoints[1]), new Point(...horizontalOutterPillarPoints[7]), new Point(...horizontalOutterPillarPoints[6]), new Point(...horizontalOutterPillarPoints[2])),
+  // bottom
+  new Rectangle(new Point(...horizontalOutterPillarPoints[0]), new Point(...horizontalOutterPillarPoints[3]), new Point(...horizontalOutterPillarPoints[5]), new Point(...horizontalOutterPillarPoints[4])),
+];
+tessaract = tessaract.concat(horizontalOutterPillar1);
+
+const horizontalOutterPilar2 = horizontalOutterPillar1.map((rectangle) => {
+  return new Rectangle(
+    new Point(rectangle.firstPoint.x, rectangle.firstPoint.y + 400, rectangle.firstPoint.z),
+    new Point(rectangle.secondPoint.x, rectangle.secondPoint.y + 400, rectangle.secondPoint.z),
+    new Point(rectangle.thirdPoint.x, rectangle.thirdPoint.y + 400, rectangle.thirdPoint.z),
+    new Point(rectangle.fourthPoint.x, rectangle.fourthPoint.y + 400, rectangle.fourthPoint.z)
+  );
+});
+tessaract = tessaract.concat(horizontalOutterPilar2);
+
+const horizontalOutterPilar3 = horizontalOutterPillar1.map((rectangle) => {
+  return new Rectangle(
+    new Point(rectangle.firstPoint.x, rectangle.firstPoint.y, rectangle.firstPoint.z + 400),
+    new Point(rectangle.secondPoint.x, rectangle.secondPoint.y, rectangle.secondPoint.z + 400),
+    new Point(rectangle.thirdPoint.x, rectangle.thirdPoint.y, rectangle.thirdPoint.z + 400),
+    new Point(rectangle.fourthPoint.x, rectangle.fourthPoint.y, rectangle.fourthPoint.z + 400)
+  );
+});
+
+tessaract = tessaract.concat(horizontalOutterPilar3);
+const horizontalOutterPilar4 = horizontalOutterPillar1.map((rectangle) => {
+  return new Rectangle(
+    new Point(rectangle.firstPoint.x, rectangle.firstPoint.y + 400, rectangle.firstPoint.z + 400),
+    new Point(rectangle.secondPoint.x, rectangle.secondPoint.y + 400, rectangle.secondPoint.z + 400),
+    new Point(rectangle.thirdPoint.x, rectangle.thirdPoint.y + 400, rectangle.thirdPoint.z + 400),
+    new Point(rectangle.fourthPoint.x, rectangle.fourthPoint.y + 400, rectangle.fourthPoint.z + 400)
+  );
+});
+
+tessaract = tessaract.concat(horizontalOutterPilar4);
+
+const depthOutterPillarPoints = [
+  // consist of 8 points
+  [0, 0, -0],
+  [0, 30, -0],
+  [50, 30, -0],
+  [50, 0, -0],
+  [0, 0, 400],
+  [50, 0, 400],
+  [50, 30, 400],
+  [0, 30, 400],
+];
+
+const depthOutterPillar1 = [
+  // front
+  new Rectangle(new Point(...depthOutterPillarPoints[0]), new Point(...depthOutterPillarPoints[1]), new Point(...depthOutterPillarPoints[2]), new Point(...depthOutterPillarPoints[3])),
+  // right
+  new Rectangle(new Point(...depthOutterPillarPoints[3]), new Point(...depthOutterPillarPoints[2]), new Point(...depthOutterPillarPoints[6]), new Point(...depthOutterPillarPoints[5])),
+  // back
+  new Rectangle(new Point(...depthOutterPillarPoints[5]), new Point(...depthOutterPillarPoints[6]), new Point(...depthOutterPillarPoints[7]), new Point(...depthOutterPillarPoints[4])),
+  // left
+  new Rectangle(
+    new Point(...depthOutterPillarPoints[4]),
+    new Point(...depthOutterPillarPoints[7]),
+
+    new Point(...depthOutterPillarPoints[1]),
+    new Point(...depthOutterPillarPoints[0])
+  ),
+  // top
+  new Rectangle(new Point(...depthOutterPillarPoints[1]), new Point(...depthOutterPillarPoints[7]), new Point(...depthOutterPillarPoints[6]), new Point(...depthOutterPillarPoints[2])),
+  // bottom
+  new Rectangle(new Point(...depthOutterPillarPoints[0]), new Point(...depthOutterPillarPoints[3]), new Point(...depthOutterPillarPoints[5]), new Point(...depthOutterPillarPoints[4])),
+];
+
+tessaract = tessaract.concat(depthOutterPillar1);
+
+const depthOutterPilar2 = depthOutterPillar1.map((rectangle) => {
+  return new Rectangle(
+    new Point(rectangle.firstPoint.x + 400, rectangle.firstPoint.y, rectangle.firstPoint.z),
+    new Point(rectangle.secondPoint.x + 400, rectangle.secondPoint.y, rectangle.secondPoint.z),
+    new Point(rectangle.thirdPoint.x + 400, rectangle.thirdPoint.y, rectangle.thirdPoint.z),
+    new Point(rectangle.fourthPoint.x + 400, rectangle.fourthPoint.y, rectangle.fourthPoint.z)
+  );
+});
+
+tessaract = tessaract.concat(depthOutterPilar2);
+
+const depthOutterPilar3 = depthOutterPillar1.map((rectangle) => {
+  return new Rectangle(
+    new Point(rectangle.firstPoint.x, rectangle.firstPoint.y + 400, rectangle.firstPoint.z),
+    new Point(rectangle.secondPoint.x, rectangle.secondPoint.y + 400, rectangle.secondPoint.z),
+    new Point(rectangle.thirdPoint.x, rectangle.thirdPoint.y + 400, rectangle.thirdPoint.z),
+    new Point(rectangle.fourthPoint.x, rectangle.fourthPoint.y + 400, rectangle.fourthPoint.z)
+  );
+});
+
+tessaract = tessaract.concat(depthOutterPilar3);
+
+const depthOutterPilar4 = depthOutterPillar1.map((rectangle) => {
+  return new Rectangle(
+    new Point(rectangle.firstPoint.x + 400, rectangle.firstPoint.y + 400, rectangle.firstPoint.z),
+    new Point(rectangle.secondPoint.x + 400, rectangle.secondPoint.y + 400, rectangle.secondPoint.z),
+    new Point(rectangle.thirdPoint.x + 400, rectangle.thirdPoint.y + 400, rectangle.thirdPoint.z),
+    new Point(rectangle.fourthPoint.x + 400, rectangle.fourthPoint.y + 400, rectangle.fourthPoint.z)
+  );
+});
+tessaract = tessaract.concat(depthOutterPilar4);
+
 let positions = [];
-for (let i = 0; i < cubeLength; i++) {
-  // turn cube into triangles
-  positions = [...positions, ...cube[i].flattenToTriangles()];
+for (let i = 0; i < tessaract.length; i++) {
+  // turn tessaract into triangles
+  positions = [...positions, ...tessaract[i].flattenToTriangles()];
 }
 
 console.log(positions);
 
 const primaryColor = [
-  [200, 70, 120],
-  [0, 0, 0],
+  [100, 0, 0],
   [0, 100, 0],
-  [0, 100, 100],
+  [0, 0, 100],
+  [0, 0, 0],
   [100, 0, 100],
   [100, 100, 0],
 ];
 
 const colors = [];
-for (let i = 0; i < cubeLength; i++) {
-  for (let j = 0; j < cube[i].totalDrawnPoints(); j++) {
-    colors.push(...primaryColor[i]);
+for (let i = 0; i < tessaract.length; i++) {
+  for (let j = 0; j < tessaract[i].totalDrawnPoints(); j++) {
+    colors.push(...primaryColor[i % 6]);
   }
 }
 
@@ -63,10 +246,11 @@ function main() {
   const buffers = initBuffers(gl, positions, colors);
 
   let rotation = [degToRad(0), degToRad(200), degToRad(50)];
-  let translation = [45, 150, 0];
+  let translation = [650, 450, 10];
   let scale = [1, 1, 1];
 
   let objectsConditions = {
+    totalVertices: positions.length / 3,
     rotation,
     translation,
     scale,
@@ -89,6 +273,7 @@ function main() {
     return function (event, ui) {
       translation[index] = ui.value;
       const objectsConditions = {
+        totalVertices: positions.length / 3,
         rotation,
         translation,
         scale,
@@ -103,6 +288,7 @@ function main() {
       var angleInRadians = degToRad(angleInDegrees);
       rotation[index] = angleInRadians;
       const objectsConditions = {
+        totalVertices: positions.length / 3,
         rotation,
         translation,
         scale,

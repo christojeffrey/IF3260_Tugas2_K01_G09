@@ -10,16 +10,39 @@ import { Point, Rectangle } from "./class.js";
 let tessaract = [];
 const pillarPoints = [
   // consist of 8 points
-  [-20, 0, -20],
-  [-20, 400, -20],
-  [20, 400, -20],
-  [20, 0, -20],
-  [-20, 0, 20],
-  [20, 0, 20],
-  [20, 400, 20],
-  [-20, 400, 20],
+  [-20, -20, -20],
+  [-20, 420, -20],
+  [20, 420, -20],
+  [20, -20, -20],
+  [-20, -20, 20],
+  [20, -20, 20],
+  [20, 420, 20],
+  [-20, 420, 20],
 ];
-// create outterPillar1 from pillarPoints
+
+const horizontalOutterPillarPoints = [
+  // consist of 8 points
+  [-20, -20, -20],
+  [-20, 20, -20],
+  [420, 20, -20],
+  [420, -20, -20],
+  [-20, -20, 20],
+  [420, -20, 20],
+  [420, 20, 20],
+  [-20, 20, 20],
+];
+
+const depthOutterPillarPoints = [
+  // consist of 8 points
+  [-20, -20, -20],
+  [-20, 20, -20],
+  [20, 20, -20],
+  [20, -20, -20],
+  [-20, -20, 420],
+  [20, -20, 420],
+  [20, 20, 420],
+  [-20, 20, 420],
+];
 
 const outterPillar1 = [
   // front
@@ -72,17 +95,7 @@ const outterPilar4 = outterPillar1.map((rectangle) => {
 });
 
 tessaract = tessaract.concat(outterPilar4);
-const horizontalOutterPillarPoints = [
-  // consist of 8 points
-  [0, 0, -20],
-  [0, 30, -20],
-  [400, 30, -20],
-  [400, 0, -20],
-  [0, 0, 20],
-  [400, 0, 20],
-  [400, 30, 20],
-  [0, 30, 20],
-];
+
 // create outterPillar1 from pillarPoints
 
 const horizontalOutterPillar1 = [
@@ -137,18 +150,6 @@ const horizontalOutterPilar4 = horizontalOutterPillar1.map((rectangle) => {
 });
 
 tessaract = tessaract.concat(horizontalOutterPilar4);
-
-const depthOutterPillarPoints = [
-  // consist of 8 points
-  [0, 0, -0],
-  [0, 30, -0],
-  [50, 30, -0],
-  [50, 0, -0],
-  [0, 0, 400],
-  [50, 0, 400],
-  [50, 30, 400],
-  [0, 30, 400],
-];
 
 const depthOutterPillar1 = [
   // front
@@ -246,7 +247,7 @@ function main() {
   const buffers = initBuffers(gl, positions, colors);
 
   let rotation = [degToRad(0), degToRad(200), degToRad(50)];
-  let translation = [650, 450, 10];
+  let translation = [750, 150, 10];
   let scale = [1, 1, 1];
 
   let objectsConditions = {

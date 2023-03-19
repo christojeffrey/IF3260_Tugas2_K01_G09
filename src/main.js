@@ -1,7 +1,7 @@
 import { degToRad, radToDeg } from "./utils.js";
 import { setupSlider } from "./ui.js";
 import { drawScene } from "./draw-scene.js";
-import { initBuffers } from "./init-buffers.js";
+import { initBuffers, unbindBuffers } from "./init-buffers.js";
 import { createProgram } from "./program.js";
 
 import tessaract from "./tessaract.js";
@@ -26,7 +26,8 @@ const primaryColor = [
   [100, 100, 0],
 ];
 
-const colors = [];
+let colors = [];
+
 for (let i = 0; i < tessaract.length; i++) {
   for (let j = 0; j < tessaract[i].totalDrawnPoints(); j++) {
     colors.push(...primaryColor[i % 6]);
@@ -47,7 +48,7 @@ function main() {
 
   // setup GLSL program
   let program = createProgram(gl);
-  const buffers = initBuffers(gl, positions, colors);
+  let buffers = initBuffers(gl, positions, colors);
 
   let rotation = [degToRad(0), degToRad(200), degToRad(50)];
   let translation = [750, 150, 10];
@@ -60,9 +61,59 @@ function main() {
     scale,
   };
 
-  drawScene(gl, program, buffers, objectsConditions);
-
   // Setup a ui.
+
+  // setup export import
+  document.querySelector("#export").addEventListener("click", () => {
+    const data = {
+      positions,
+      colors,
+    };
+    const json = JSON.stringify(data);
+    const blob = new Blob([json], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.download = "data.json";
+
+    a.href = url;
+    a.click();
+    drawScene(gl, program, buffers, objectsConditions);
+  });
+
+  // on import Button click, read file on input #importFile
+  document.querySelector("#import").addEventListener("click", () => {
+    const file = document.querySelector("#importFile").files[0];
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const data = JSON.parse(e.target.result);
+      positions = data.positions;
+      colors = data.colors;
+      buffers = initBuffers(gl, positions, colors);
+      const objectsConditions = {
+        totalVertices: positions.length / 3,
+        rotation,
+        translation,
+        scale,
+      };
+      drawScene(gl, program, buffers, objectsConditions);
+    };
+    reader.readAsText(file);
+  });
+
+  // clear canvas
+  document.querySelector("#clear").addEventListener("click", () => {
+    positions = [];
+    colors = [];
+    buffers = initBuffers(gl, positions, colors);
+    const objectsConditions = {
+      totalVertices: 0,
+      rotation,
+      translation,
+      scale,
+    };
+    drawScene(gl, program, buffers, objectsConditions);
+  });
+  // setup slider
   setupSlider("#x", { value: translation[0], slide: updatePosition(0), max: gl.canvas.width });
   setupSlider("#y", { value: translation[1], slide: updatePosition(1), max: gl.canvas.height });
   setupSlider("#z", { value: translation[2], slide: updatePosition(2), max: gl.canvas.height });
@@ -107,6 +158,8 @@ function main() {
       drawScene(gl, program, buffers, objectsConditions);
     };
   }
+
+  drawScene(gl, program, buffers, objectsConditions);
 }
 
 main();

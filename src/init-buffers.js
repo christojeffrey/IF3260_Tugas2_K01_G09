@@ -33,4 +33,11 @@ function initColorBuffer(gl, colors) {
   return colorBuffer;
 }
 
-export { initBuffers };
+// unbind and clear
+
+function unbindBuffers(gl) {
+  gl.bindBuffer(gl.ARRAY_BUFFER, null);
+  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null);
+}
+
+export { initBuffers, unbindBuffers };

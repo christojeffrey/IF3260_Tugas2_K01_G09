@@ -3,46 +3,40 @@ import { setupSlider } from "./ui.js";
 import { drawScene } from "./draw-scene.js";
 import { initBuffers, unbindBuffers } from "./init-buffers.js";
 import { createProgram } from "./program.js";
-import { Point, Rectangle } from "./class.js";
+
+import tessaract from "./tessaract.js";
 
 // defining
 // POINTS ORDER MATTERS
-const cube = [
-  // front
-  new Rectangle(new Point(0, 0, 0), new Point(0, 150, 0), new Point(30, 150, 0), new Point(30, 0, 0)),
-  // first side
-  new Rectangle(new Point(0, 0, 0), new Point(0, 0, 30), new Point(0, 150, 30), new Point(0, 150, 0)),
-  // second side
-  new Rectangle(new Point(30, 0, 0), new Point(30, 150, 0), new Point(30, 150, 30), new Point(30, 0, 30)),
-  // third side
-  new Rectangle(new Point(0, 0, 30), new Point(30, 0, 30), new Point(30, 150, 30), new Point(0, 150, 30)),
-  // top
-  new Rectangle(new Point(0, 150, 0), new Point(0, 150, 30), new Point(30, 150, 30), new Point(30, 150, 0)),
-  // bottom
-  new Rectangle(new Point(0, 0, 0), new Point(30, 0, 0), new Point(30, 0, 30), new Point(0, 0, 30)),
-];
-const cubeLength = cube.length;
+
 let positions = [];
-for (let i = 0; i < cubeLength; i++) {
-  // turn cube into triangles
-  positions = [...positions, ...cube[i].flattenToTriangles()];
+for (let i = 0; i < tessaract.length; i++) {
+  // turn tessaract into triangles
+  positions = [...positions, ...tessaract[i].flattenToTriangles()];
 }
 
 console.log(positions);
 
 const primaryColor = [
-  [200, 70, 120],
-  [0, 0, 0],
+  [100, 0, 0],
   [0, 100, 0],
-  [0, 100, 100],
+  [0, 0, 100],
+  [0, 0, 0],
   [100, 0, 100],
   [100, 100, 0],
 ];
 
+<<<<<<< HEAD
 let colors = [];
 for (let i = 0; i < cubeLength; i++) {
   for (let j = 0; j < cube[i].totalDrawnPoints(); j++) {
     colors.push(...primaryColor[i]);
+=======
+const colors = [];
+for (let i = 0; i < tessaract.length; i++) {
+  for (let j = 0; j < tessaract[i].totalDrawnPoints(); j++) {
+    colors.push(...primaryColor[i % 6]);
+>>>>>>> main
   }
 }
 
@@ -63,10 +57,11 @@ function main() {
   let buffers = initBuffers(gl, positions, colors);
 
   let rotation = [degToRad(0), degToRad(200), degToRad(50)];
-  let translation = [45, 150, 0];
+  let translation = [750, 150, 10];
   let scale = [1, 1, 1];
 
   let objectsConditions = {
+    totalVertices: positions.length / 3,
     rotation,
     translation,
     scale,
@@ -133,6 +128,7 @@ function main() {
     return function (event, ui) {
       translation[index] = ui.value;
       const objectsConditions = {
+        totalVertices: positions.length / 3,
         rotation,
         translation,
         scale,
@@ -147,6 +143,7 @@ function main() {
       var angleInRadians = degToRad(angleInDegrees);
       rotation[index] = angleInRadians;
       const objectsConditions = {
+        totalVertices: positions.length / 3,
         rotation,
         translation,
         scale,

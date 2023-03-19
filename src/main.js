@@ -76,34 +76,40 @@ function main() {
 
     a.href = url;
     a.click();
+    drawScene(gl, program, buffers, objectsConditions);
   });
 
+  // on import Button click, read file on input #importFile
   document.querySelector("#import").addEventListener("click", () => {
-    const input = document.createElement("input");
-    input.type = "file";
-    input.accept = "application/json";
-    input.addEventListener("change", () => {
-      const file = input.files[0];
-      const reader = new FileReader();
-      reader.addEventListener("load", () => {
-        const data = JSON.parse(reader.result);
-        positions = data.positions;
-        colors = data.colors;
-        buffers = initBuffers(gl, positions, colors);
-        console.log(positions);
-        console.log(colors);
-      });
-      reader.readAsText(file);
-    });
-    input.click();
+    const file = document.querySelector("#importFile").files[0];
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const data = JSON.parse(e.target.result);
+      positions = data.positions;
+      colors = data.colors;
+      buffers = initBuffers(gl, positions, colors);
+      const objectsConditions = {
+        totalVertices: positions.length / 3,
+        rotation,
+        translation,
+        scale,
+      };
+      drawScene(gl, program, buffers, objectsConditions);
+    };
+    reader.readAsText(file);
   });
 
   // clear canvas
   document.querySelector("#clear").addEventListener("click", () => {
     positions = [];
     colors = [];
-    buffers = initBuffers(gl, [], []);
-    console.log("cleared");
+    buffers = initBuffers(gl, positions, colors);
+    const objectsConditions = {
+      totalVertices: 0,
+      rotation,
+      translation,
+      scale,
+    };
     drawScene(gl, program, buffers, objectsConditions);
   });
   // setup slider

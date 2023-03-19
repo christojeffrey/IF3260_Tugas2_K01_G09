@@ -1,10 +1,12 @@
 import { degToRad, radToDeg } from "./utils.js";
 import { setupSlider } from "./ui.js";
 import { drawScene } from "./draw-scene.js";
-import { initBuffers, unbindBuffers } from "./init-buffers.js";
+import { initBuffers } from "./init-buffers.js";
 import { createProgram } from "./program.js";
 
 import tessaract from "./tessaract.js";
+
+const ANIMATION_SPEED = 0.5;
 
 // defining
 // POINTS ORDER MATTERS
@@ -35,7 +37,7 @@ for (let i = 0; i < tessaract.length; i++) {
 }
 
 // at this point, the program now what to draw from the positions and colors arrays. only these two arrays matter for the program to draw the cube.
-
+let deltaTime = 0;
 function main() {
   let canvas = document.querySelector("#canvas");
   let gl = canvas.getContext("webgl");
@@ -89,12 +91,7 @@ function main() {
       positions = data.positions;
       colors = data.colors;
       buffers = initBuffers(gl, positions, colors);
-      const objectsConditions = {
-        totalVertices: positions.length / 3,
-        rotation,
-        translation,
-        scale,
-      };
+      objectsConditions.totalVertices = positions.length / 3;
       drawScene(gl, program, buffers, objectsConditions);
     };
     reader.readAsText(file);
@@ -105,14 +102,10 @@ function main() {
     positions = [];
     colors = [];
     buffers = initBuffers(gl, positions, colors);
-    const objectsConditions = {
-      totalVertices: 0,
-      rotation,
-      translation,
-      scale,
-    };
+    objectsConditions.totalVertices = 0;
     drawScene(gl, program, buffers, objectsConditions);
   });
+
   // setup slider
   setupSlider("#x", { value: translation[0], slide: updatePosition(0), max: gl.canvas.width });
   setupSlider("#y", { value: translation[1], slide: updatePosition(1), max: gl.canvas.height });
@@ -127,7 +120,7 @@ function main() {
   function updatePosition(index) {
     return function (event, ui) {
       translation[index] = ui.value;
-      const objectsConditions = {
+      objectsConditions = {
         totalVertices: positions.length / 3,
         rotation,
         translation,
@@ -142,7 +135,7 @@ function main() {
       var angleInDegrees = ui.value;
       var angleInRadians = degToRad(angleInDegrees);
       rotation[index] = angleInRadians;
-      const objectsConditions = {
+      objectsConditions = {
         totalVertices: positions.length / 3,
         rotation,
         translation,
@@ -159,7 +152,31 @@ function main() {
     };
   }
 
-  drawScene(gl, program, buffers, objectsConditions);
+  let then = 0;
+
+  // Draw the scene repeatedly
+  function render(now) {
+    now *= 0.001; // convert to seconds
+    deltaTime = now - then;
+    then = now;
+
+    objectsConditions.rotation[0] += deltaTime * ANIMATION_SPEED;
+    objectsConditions.rotation[1] += deltaTime * ANIMATION_SPEED;
+    objectsConditions.rotation[2] += deltaTime * ANIMATION_SPEED;
+
+    drawScene(gl, program, buffers, objectsConditions);
+
+    if (document.querySelector("#animate").checked) requestAnimationFrame(render);
+  }
+
+  // animate checkbox
+  document.querySelector("#animate").addEventListener("change", (e) => {
+    if (e.target.checked) {
+      requestAnimationFrame(render);
+    }
+  });
+
+  requestAnimationFrame(render);
 }
 
 main();

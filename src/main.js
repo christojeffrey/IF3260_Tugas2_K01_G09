@@ -27,6 +27,7 @@ const primaryColor = [
 ];
 
 let colors = [];
+
 for (let i = 0; i < tessaract.length; i++) {
   for (let j = 0; j < tessaract[i].totalDrawnPoints(); j++) {
     colors.push(...primaryColor[i % 6]);

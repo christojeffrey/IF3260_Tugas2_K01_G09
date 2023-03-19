@@ -8,6 +8,15 @@ class Point {
   flatten() {
     return [this.x, this.y, this.z];
   }
+
+  export() {
+    return [this.x, this.y, this.z];
+  }
+  import(array) {
+    this.x = array[0];
+    this.y = array[1];
+    this.z = array[2];
+  }
 }
 
 class Rectangle {
@@ -27,6 +36,15 @@ class Rectangle {
   }
   totalDrawnPoints() {
     return this.triangleCount() * 3;
+  }
+  export() {
+    return [this.firstPoint.export(), this.secondPoint.export(), this.thirdPoint.export(), this.fourthPoint.export()];
+  }
+  import(array) {
+    this.firstPoint.import(array[0]);
+    this.secondPoint.import(array[1]);
+    this.thirdPoint.import(array[2]);
+    this.fourthPoint.import(array[3]);
   }
 }
 

@@ -1,7 +1,7 @@
 import { degToRad, radToDeg } from "./utils.js";
 import { setupSlider } from "./ui.js";
 import { drawScene } from "./draw-scene.js";
-import { initBuffers } from "./init-buffers.js";
+import { initBuffers, unbindBuffers } from "./init-buffers.js";
 import { createProgram } from "./program.js";
 import { Point, Rectangle } from "./class.js";
 
@@ -39,7 +39,7 @@ const primaryColor = [
   [100, 100, 0],
 ];
 
-const colors = [];
+let colors = [];
 for (let i = 0; i < cubeLength; i++) {
   for (let j = 0; j < cube[i].totalDrawnPoints(); j++) {
     colors.push(...primaryColor[i]);
@@ -60,7 +60,7 @@ function main() {
 
   // setup GLSL program
   let program = createProgram(gl);
-  const buffers = initBuffers(gl, positions, colors);
+  let buffers = initBuffers(gl, positions, colors);
 
   let rotation = [degToRad(0), degToRad(200), degToRad(50)];
   let translation = [45, 150, 0];
@@ -72,9 +72,53 @@ function main() {
     scale,
   };
 
-  drawScene(gl, program, buffers, objectsConditions);
-
   // Setup a ui.
+
+  // setup export import
+  document.querySelector("#export").addEventListener("click", () => {
+    const data = {
+      positions,
+      colors,
+    };
+    const json = JSON.stringify(data);
+    const blob = new Blob([json], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.download = "data.json";
+
+    a.href = url;
+    a.click();
+  });
+
+  document.querySelector("#import").addEventListener("click", () => {
+    const input = document.createElement("input");
+    input.type = "file";
+    input.accept = "application/json";
+    input.addEventListener("change", () => {
+      const file = input.files[0];
+      const reader = new FileReader();
+      reader.addEventListener("load", () => {
+        const data = JSON.parse(reader.result);
+        positions = data.positions;
+        colors = data.colors;
+        buffers = initBuffers(gl, positions, colors);
+        console.log(positions);
+        console.log(colors);
+      });
+      reader.readAsText(file);
+    });
+    input.click();
+  });
+
+  // clear canvas
+  document.querySelector("#clear").addEventListener("click", () => {
+    positions = [];
+    colors = [];
+    buffers = initBuffers(gl, [], []);
+    console.log("cleared");
+    drawScene(gl, program, buffers, objectsConditions);
+  });
+  // setup slider
   setupSlider("#x", { value: translation[0], slide: updatePosition(0), max: gl.canvas.width });
   setupSlider("#y", { value: translation[1], slide: updatePosition(1), max: gl.canvas.height });
   setupSlider("#z", { value: translation[2], slide: updatePosition(2), max: gl.canvas.height });
@@ -117,6 +161,8 @@ function main() {
       drawScene(gl, program, buffers, objectsConditions);
     };
   }
+
+  drawScene(gl, program, buffers, objectsConditions);
 }
 
 main();

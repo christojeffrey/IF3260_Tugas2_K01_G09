@@ -58,7 +58,7 @@ function drawScene(gl, program, buffers, objectsConditions) {
   gl.vertexAttribPointer(colorLocation, size, type, normalize, stride, offset);
 
   // Compute the matrices
-  var matrix = m4.projection(gl.canvas.clientWidth, gl.canvas.clientHeight, 400);
+  var matrix = m4.projection(gl.canvas.clientWidth, gl.canvas.clientHeight, 2000);
   matrix = m4.translate(matrix, translation[0], translation[1], translation[2]);
   matrix = m4.xRotate(matrix, rotation[0]);
   matrix = m4.yRotate(matrix, rotation[1]);
@@ -71,7 +71,7 @@ function drawScene(gl, program, buffers, objectsConditions) {
   // Draw the geometry.
   var primitiveType = gl.TRIANGLES;
   var offset = 0;
-  var count = 16 * 6;
+  var count = objectsConditions.totalVertices;
   gl.drawArrays(primitiveType, offset, count);
 }
 

@@ -26,17 +26,10 @@ const primaryColor = [
   [100, 100, 0],
 ];
 
-<<<<<<< HEAD
 let colors = [];
-for (let i = 0; i < cubeLength; i++) {
-  for (let j = 0; j < cube[i].totalDrawnPoints(); j++) {
-    colors.push(...primaryColor[i]);
-=======
-const colors = [];
 for (let i = 0; i < tessaract.length; i++) {
   for (let j = 0; j < tessaract[i].totalDrawnPoints(); j++) {
     colors.push(...primaryColor[i % 6]);
->>>>>>> main
   }
 }
 

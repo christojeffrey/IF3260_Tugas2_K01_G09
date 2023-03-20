@@ -48,4 +48,33 @@ class Rectangle {
   }
 }
 
-export { Point, Rectangle };
+//create class Triangle
+class Triangle {
+  constructor(firstPoint, secondPoint, thirdPoint) {
+    this.firstPoint = firstPoint;
+    this.secondPoint = secondPoint;
+    this.thirdPoint = thirdPoint;
+  }
+
+  // flatten method
+  flattenToTriangles() {
+    return [...this.firstPoint.flatten(), ...this.secondPoint.flatten(), ...this.thirdPoint.flatten()];
+  }
+  triangleCount() {
+    return 1;
+  }
+  totalDrawnPoints() {
+    return this.triangleCount() * 3;
+  }
+  export() {
+    return [this.firstPoint.export(), this.secondPoint.export(), this.thirdPoint.export()];
+  }
+  import(array) {
+    this.firstPoint.import(array[0]);
+    this.secondPoint.import(array[1]);
+    this.thirdPoint.import(array[2]);
+  }
+}
+
+
+export { Point, Rectangle, Triangle };

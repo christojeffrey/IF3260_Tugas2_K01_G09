@@ -5,16 +5,18 @@ import { initBuffers } from "./init-buffers.js";
 import { createProgram } from "./program.js";
 
 import tessaract from "./tessaract.js";
+import pyramid from "./pyramid.js";
 
 const ANIMATION_SPEED = 0.5;
 
 // defining
 // POINTS ORDER MATTERS
+const object = tessaract
 
 let positions = [];
-for (let i = 0; i < tessaract.length; i++) {
-  // turn tessaract into triangles
-  positions = [...positions, ...tessaract[i].flattenToTriangles()];
+for (let i = 0; i < object.length; i++) {
+  // turn object into triangles
+  positions = [...positions, ...object[i].flattenToTriangles()];
 }
 
 console.log(positions);
@@ -30,8 +32,8 @@ const primaryColor = [
 
 let colors = [];
 
-for (let i = 0; i < tessaract.length; i++) {
-  for (let j = 0; j < tessaract[i].totalDrawnPoints(); j++) {
+for (let i = 0; i < object.length; i++) {
+  for (let j = 0; j < object[i].totalDrawnPoints(); j++) {
     colors.push(...primaryColor[i % 6]);
   }
 }
@@ -107,7 +109,7 @@ function main() {
   });
 
   // setup slider
-  setupSlider("#x", { value: translation[0], slide: updatePosition(0), max: gl.canvas.width });
+  setupSlider("#x", { value: translation[0], slide: updatePosition(0), max: gl.canvas.width*3 });
   setupSlider("#y", { value: translation[1], slide: updatePosition(1), max: gl.canvas.height });
   setupSlider("#z", { value: translation[2], slide: updatePosition(2), max: gl.canvas.height });
   setupSlider("#angleX", { value: radToDeg(rotation[0]), slide: updateRotation(0), max: 360 });

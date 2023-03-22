@@ -6,12 +6,13 @@ import { createProgram } from "./program.js";
 
 import tessaract from "./tessaract.js";
 import pyramid from "./pyramid.js";
+import { m4 } from "./m4.js";
 
 const ANIMATION_SPEED = 0.5;
 
 // defining
 // POINTS ORDER MATTERS
-const object = tessaract
+const object = pyramid
 
 let positions = [];
 for (let i = 0; i < object.length; i++) {
@@ -53,18 +54,20 @@ function main() {
   // setup GLSL program
   let program = createProgram(gl);
   let buffers = initBuffers(gl, positions, colors);
-
+  
   let rotation = [degToRad(0), degToRad(200), degToRad(50)];
   let translation = [750, 150, 10];
   let scale = [1, 1, 1];
-
+  let radius = 800;
+  let cameraAngleRadians = degToRad(0)
   let objectsConditions = {
     totalVertices: positions.length / 3,
     rotation,
     translation,
     scale,
+    cameraAngleRadians,
+    radius
   };
-
   // Setup a ui.
 
   // setup export import
@@ -118,7 +121,33 @@ function main() {
   setupSlider("#scaleX", { value: scale[0], slide: updateScale(0), min: -5, max: 5, step: 0.01, precision: 2 });
   setupSlider("#scaleY", { value: scale[1], slide: updateScale(1), min: -5, max: 5, step: 0.01, precision: 2 });
   setupSlider("#scaleZ", { value: scale[2], slide: updateScale(2), min: -5, max: 5, step: 0.01, precision: 2 });
+  setupSlider("#cameraAngle", {value: radToDeg(cameraAngleRadians), slide: updateCameraAngle, min: -360, max: 360});
+  setupSlider("#radius", {value: radius, slide: updateRadius, min: 0, max: 3000});
 
+  function updateCameraAngle(event, ui) {
+    cameraAngleRadians = degToRad(ui.value);
+    objectsConditions = {
+      totalVertices: positions.length / 3,
+      rotation,
+      translation,
+      scale,
+      cameraAngleRadians,
+      radius,
+    };
+    drawScene(gl, program, buffers, objectsConditions);
+  }
+  function updateRadius(event, ui) {
+    radius = ui.value;
+    objectsConditions = {
+      totalVertices: positions.length / 3,
+      rotation,
+      translation,
+      scale,
+      cameraAngleRadians,
+      radius,
+    };
+    drawScene(gl, program, buffers, objectsConditions);
+  }
   function updatePosition(index) {
     return function (event, ui) {
       translation[index] = ui.value;
@@ -127,6 +156,8 @@ function main() {
         rotation,
         translation,
         scale,
+        cameraAngleRadians,
+        radius,
       };
       drawScene(gl, program, buffers, objectsConditions);
     };
@@ -142,6 +173,8 @@ function main() {
         rotation,
         translation,
         scale,
+        cameraAngleRadians,
+        radius,
       };
       drawScene(gl, program, buffers, objectsConditions);
     };
@@ -150,12 +183,20 @@ function main() {
   function updateScale(index) {
     return function (event, ui) {
       scale[index] = ui.value;
+      objectsConditions = {
+        totalVertices: positions.length / 3,
+        rotation,
+        translation,
+        scale,
+        cameraAngleRadians,
+        radius,
+      };
       drawScene(gl, program, buffers, objectsConditions);
     };
   }
 
   let then = 0;
-
+  
   // Draw the scene repeatedly
   function render(now) {
     now *= 0.001; // convert to seconds
@@ -165,7 +206,7 @@ function main() {
     objectsConditions.rotation[0] += deltaTime * ANIMATION_SPEED;
     objectsConditions.rotation[1] += deltaTime * ANIMATION_SPEED;
     objectsConditions.rotation[2] += deltaTime * ANIMATION_SPEED;
-
+    
     drawScene(gl, program, buffers, objectsConditions);
 
     if (document.querySelector("#animate").checked) requestAnimationFrame(render);

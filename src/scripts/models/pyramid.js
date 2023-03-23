@@ -1,6 +1,7 @@
 import { Point } from './point.js';
 import { Rectangle } from './rectangle.js';
 import { v3 } from "../math/v3.js";
+import { primaryColors } from '../constant/colors.js';
 
 let pyramid = {
     position: [],
@@ -271,19 +272,10 @@ rectanglesnormals = rectanglesnormals.concat(pillarnormals);
   rectangles = rectangles.concat(horizontalOutterPilar3);
   rectanglesnormals = rectanglesnormals.concat(pillarnormals);
 
-const primaryColor = [
-    [100, 0, 0],
-    [0, 100, 0],
-    [0, 0, 100],
-    [0, 0, 0],
-    [100, 0, 100],
-    [100, 100, 0],
-];
-
 for (let i = 0; i < rectangles.length; i++) {
   let rectangle = rectangles[i].flattenToTriangles();
   pyramid.position = [...pyramid.position, ...rectangle];
-  for (let j = 0; j < rectangles[i].length; j += 3 *3) {
+  for (let j = 0; j < rectangle.length; j += 3 * 3) {
     let vec1 = v3.create(
         rectangle[j + 3] - rectangle[j + 0], 
         rectangle[j + 4] - rectangle[j + 1], 
@@ -303,12 +295,8 @@ for (let i = 0; i < rectangles.length; i++) {
     pyramid.normals = [...pyramid.normals, ...normal, ...normal, ...normal];
   }
   for (let j = 0; j < rectangles[i].totalDrawnPoints(); j++) {
-    pyramid.colors.push(...primaryColor[i % 6]);
+    pyramid.colors = [...pyramid.colors, ...primaryColors[i % 6]];
   }
-}
-
-for (let i = 0; i < rectanglesnormals.length; i++) {
-  pyramid.normals = [...pyramid.normals, ...rectanglesnormals[i].flattenToTriangles()];
 }
 
 export default pyramid;

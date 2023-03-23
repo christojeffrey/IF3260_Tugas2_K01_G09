@@ -1,6 +1,6 @@
 import { Point } from "./point.js";
 import { Rectangle } from "./rectangle.js";
-import { white, yellow, blue, green, red, orange, black } from "../constant/colors.js";
+import { rubicColors } from "../constant/colors.js";
 import { v3 } from "../math/v3.js";
 
 // Rubic size
@@ -136,17 +136,17 @@ for (let i = 0; i < RUBIC_SIZE; i++) {
             // Vertical Pillar Color
             /* ============================================================================================================================== */
             for (let n = 0; n < 6; n++)  
-                rubic.colors = k == 0               ? rubic.colors.concat(red)    : rubic.colors.concat(black);  // Red for front
+                rubic.colors = k == 0               ? rubic.colors.concat(rubicColors.red)    : rubic.colors.concat(rubicColors.black);  // Red for front
             for (let n = 0; n < 6; n++)  
-                rubic.colors = k == RUBIC_SIZE      ? rubic.colors.concat(orange) : rubic.colors.concat(black); // Orange for back
+                rubic.colors = k == RUBIC_SIZE      ? rubic.colors.concat(rubicColors.orange) : rubic.colors.concat(rubicColors.black); // Orange for back
             for (let n = 0; n < 6; n++)  
-                rubic.colors = i == 0               ? rubic.colors.concat(blue)   : rubic.colors.concat(black);  // Blue for left
+                rubic.colors = i == 0               ? rubic.colors.concat(rubicColors.blue)   : rubic.colors.concat(rubicColors.black);  // Blue for left
             for (let n = 0; n < 6; n++)  
-                rubic.colors = i == RUBIC_SIZE - 1  ? rubic.colors.concat(green)  : rubic.colors.concat(black);  // Green for right
+                rubic.colors = i == RUBIC_SIZE - 1  ? rubic.colors.concat(rubicColors.green)  : rubic.colors.concat(rubicColors.black);  // Green for right
             for (let n = 0; n < 6; n++)  
-                rubic.colors = j == 0               ? rubic.colors.concat(yellow) : rubic.colors.concat(black);  // Yellow for top
+                rubic.colors = j == 0               ? rubic.colors.concat(rubicColors.yellow) : rubic.colors.concat(rubicColors.black);  // Yellow for top
             for (let n = 0; n < 6; n++)  
-                rubic.colors = j == RUBIC_SIZE      ? rubic.colors.concat(white)  : rubic.colors.concat(black);  // White for bottom
+                rubic.colors = j == RUBIC_SIZE      ? rubic.colors.concat(rubicColors.white)  : rubic.colors.concat(rubicColors.black);  // White for bottom
             /* ============================================================================================================================== */
             
 
@@ -168,17 +168,17 @@ for (let i = 0; i < RUBIC_SIZE; i++) {
             // Horizontal Pillar Color
             /* ============================================================================================================================== */
             for (let n = 0; n < 6; n++)  
-                rubic.colors = j == 0               ? rubic.colors.concat(red)    : rubic.colors.concat(black);  // Red for front
+                rubic.colors = j == 0               ? rubic.colors.concat(rubicColors.red)    : rubic.colors.concat(rubicColors.black);  // Red for front
             for (let n = 0; n < 6; n++)  
-                rubic.colors = j == RUBIC_SIZE      ? rubic.colors.concat(orange) : rubic.colors.concat(black); // Orange for back
+                rubic.colors = j == RUBIC_SIZE      ? rubic.colors.concat(rubicColors.orange) : rubic.colors.concat(rubicColors.black); // Orange for back
             for (let n = 0; n < 6; n++)  
-                rubic.colors = k == 0               ? rubic.colors.concat(blue)   : rubic.colors.concat(black);  // Blue for left
+                rubic.colors = k == 0               ? rubic.colors.concat(rubicColors.blue)   : rubic.colors.concat(rubicColors.black);  // Blue for left
             for (let n = 0; n < 6; n++)  
-                rubic.colors = k == RUBIC_SIZE      ? rubic.colors.concat(green)  : rubic.colors.concat(black);  // Green for right
+                rubic.colors = k == RUBIC_SIZE      ? rubic.colors.concat(rubicColors.green)  : rubic.colors.concat(rubicColors.black);  // Green for right
             for (let n = 0; n < 6; n++)  
-                rubic.colors = i == 0               ? rubic.colors.concat(yellow) : rubic.colors.concat(black);  // Yellow for top
+                rubic.colors = i == 0               ? rubic.colors.concat(rubicColors.yellow) : rubic.colors.concat(rubicColors.black);  // Yellow for top
             for (let n = 0; n < 6; n++)  
-                rubic.colors = i == RUBIC_SIZE - 1  ? rubic.colors.concat(white)  : rubic.colors.concat(black);  // White for bottom
+                rubic.colors = i == RUBIC_SIZE - 1  ? rubic.colors.concat(rubicColors.white)  : rubic.colors.concat(rubicColors.black);  // White for bottom
             /* ============================================================================================================================== */
 
 
@@ -199,17 +199,17 @@ for (let i = 0; i < RUBIC_SIZE; i++) {
             // Depth Pillar Color
             /* ============================================================================================================================== */
             for (let n = 0; n < 6; n++)  
-                rubic.colors = i == 0               ? rubic.colors.concat(red)    : rubic.colors.concat(black);  // Red for front
+                rubic.colors = i == 0               ? rubic.colors.concat(rubicColors.red)    : rubic.colors.concat(rubicColors.black);  // Red for front
             for (let n = 0; n < 6; n++)  
-                rubic.colors = i == RUBIC_SIZE - 1  ? rubic.colors.concat(orange) : rubic.colors.concat(black);  // Orange for back
+                rubic.colors = i == RUBIC_SIZE - 1  ? rubic.colors.concat(rubicColors.orange) : rubic.colors.concat(rubicColors.black);  // Orange for back
             for (let n = 0; n < 6; n++)  
-                rubic.colors = j == 0               ? rubic.colors.concat(blue)   : rubic.colors.concat(black);  // Blue for left
+                rubic.colors = j == 0               ? rubic.colors.concat(rubicColors.blue)   : rubic.colors.concat(rubicColors.black);  // Blue for left
             for (let n = 0; n < 6; n++)  
-                rubic.colors = j == RUBIC_SIZE      ? rubic.colors.concat(green)  : rubic.colors.concat(black);  // Green for right
+                rubic.colors = j == RUBIC_SIZE      ? rubic.colors.concat(rubicColors.green)  : rubic.colors.concat(rubicColors.black);  // Green for right
             for (let n = 0; n < 6; n++)  
-                rubic.colors = k == 0               ? rubic.colors.concat(yellow) : rubic.colors.concat(black);  // Yellow for top
+                rubic.colors = k == 0               ? rubic.colors.concat(rubicColors.yellow) : rubic.colors.concat(rubicColors.black);  // Yellow for top
             for (let n = 0; n < 6; n++)  
-                rubic.colors = k == RUBIC_SIZE      ? rubic.colors.concat(white)  : rubic.colors.concat(black);  // White for bottom
+                rubic.colors = k == RUBIC_SIZE      ? rubic.colors.concat(rubicColors.white)  : rubic.colors.concat(rubicColors.black);  // White for bottom
             /* ============================================================================================================================== */
         }
     }
@@ -239,11 +239,5 @@ for (let i = 0; i < rectangles.length; i++) {
     }
     rubic.position = [...rubic.position, ...rectangle];
 }
-
-console.log(rubic.position.length);
-console.log(rubic.normals.length);
-
-console.log(rubic.position);
-console.log(rubic.normals);
 
 export default rubic;

@@ -1,6 +1,7 @@
 import { Point } from "./point.js";
 import { Rectangle } from "./rectangle.js";
 import { v3 } from "../math/v3.js";
+import { primaryColors } from "../constant/colors.js";
 
 let tessaract = {
   position: [],
@@ -411,15 +412,6 @@ const depthInnerPilar4 = depthInnerPillar1.map((rectangle) => {
 });
 rectangles = rectangles.concat(depthInnerPilar4);
 
-const primaryColor = [
-  [100, 0, 0],
-  [0, 100, 0],
-  [0, 0, 100],
-  [0, 0, 0],
-  [100, 0, 100],
-  [100, 100, 0],
-];
-
 for (let i = 0; i < rectangles.length; i++) {
   let rectangle = rectangles[i].flattenToTriangles();
   for (let j = 0; j < rectangle.length; j += 3 * 3) {
@@ -435,10 +427,10 @@ for (let i = 0; i < rectangles.length; i++) {
     );
     let normal;
     if (i % 2)
-        normal      = v3.cross(vec1, vec2);
+        normal        = v3.cross(vec1, vec2);
     else
-        normal      = v3.cross(vec2, vec1);
-    normal          = v3.normalize(normal);
+        normal        = v3.cross(vec2, vec1);
+    normal            = v3.normalize(normal);
     tessaract.normals = [...tessaract.normals, ...normal, ...normal, ...normal];
   }
   tessaract.position = [...tessaract.position, ...rectangles[i].flattenToTriangles()];
@@ -446,7 +438,7 @@ for (let i = 0; i < rectangles.length; i++) {
 
 for (let i = 0; i < rectangles.length; i++) {
   for (let j = 0; j < 6; j++) {
-    tessaract.colors = [...tessaract.colors, ...primaryColor[i % 6]];
+    tessaract.colors = [...tessaract.colors, ...primaryColors[i % 6]];
   }
 }
 

@@ -60,52 +60,34 @@ const pillarPoints2 = [
     [20, 20, 420],
     [-20, 20, 420],
   ];
-  
-  var outterpillarnormal = [
+  const normalPoints = [
+    // consist of 6 points
+    [0, 0, 1],
+    [1, 0, 0],
+    [0, 0, -1],
+    [-1, 0, 0],
+    [0, 1, 0],
+    [0, -1, 0],
+  ]
+  var pillarnormals = [
     // front
-    0,0,1,
-    0,0,1,
-    0,0,1,
-    0,0,1,
+    new Rectangle(new Point(...normalPoints[0]), new Point(...normalPoints[0]), new Point(...normalPoints[0]), new Point(...normalPoints[0])),
 
     //right
-    1,0,0,
-    1,0,0,
-    1,0,0,
-    1,0,0,
+    new Rectangle(new Point(...normalPoints[1]), new Point(...normalPoints[1]), new Point(...normalPoints[1]), new Point(...normalPoints[1])),
 
     //back
-    0,0,-1,
-    0,0,-1,
-    0,0,-1,
-    0,0,-1,
+    new Rectangle(new Point(...normalPoints[2]), new Point(...normalPoints[2]), new Point(...normalPoints[2]), new Point(...normalPoints[2])),
     
     //left
-    -1,0,0,
-    -1,0,0,
-    -1,0,0,
-    -1,0,0,
+    new Rectangle(new Point(...normalPoints[3]), new Point(...normalPoints[3]), new Point(...normalPoints[3]), new Point(...normalPoints[3])),
 
     //top
-    0,1,0,
-    0,1,0,
-    0,1,0,
-    0,1,0,
+    new Rectangle(new Point(...normalPoints[4]), new Point(...normalPoints[4]), new Point(...normalPoints[4]), new Point(...normalPoints[4])),
 
     //bottom
-    0,-1,0,
-    0,-1,0,
-    0,-1,0,
-    0,-1,0,
+    new Rectangle(new Point(...normalPoints[5]), new Point(...normalPoints[5]), new Point(...normalPoints[5]), new Point(...normalPoints[5])),
   ];
-  pyramidnormals = pyramidnormals.concat(outterpillarnormal);
-  pyramidnormals = pyramidnormals.concat(outterpillarnormal);
-  pyramidnormals = pyramidnormals.concat(outterpillarnormal);
-  pyramidnormals = pyramidnormals.concat(outterpillarnormal);
-  pyramidnormals = pyramidnormals.concat(outterpillarnormal);
-  pyramidnormals = pyramidnormals.concat(outterpillarnormal);
-  pyramidnormals = pyramidnormals.concat(outterpillarnormal);
-  pyramidnormals = pyramidnormals.concat(outterpillarnormal);
   const outterPillar1 = [
     // front
     new Rectangle(new Point(...pillarPoints[0]), new Point(...pillarPoints[1]), new Point(...pillarPoints[2]), new Point(...pillarPoints[3])),
@@ -128,6 +110,7 @@ const pillarPoints2 = [
   ];
 
   pyramid = pyramid.concat(outterPillar1);
+  pyramidnormals = pyramidnormals.concat(pillarnormals);
   const outterPillar2 = [
     // front
     new Rectangle(new Point(...pillarPoints2[0]), new Point(...pillarPoints2[1]), new Point(...pillarPoints2[2]), new Point(...pillarPoints2[3])),
@@ -149,6 +132,7 @@ const pillarPoints2 = [
     new Rectangle(new Point(...pillarPoints2[0]), new Point(...pillarPoints2[3]), new Point(...pillarPoints2[5]), new Point(...pillarPoints2[4])),
   ];
  pyramid = pyramid.concat(outterPillar2);
+ pyramidnormals = pyramidnormals.concat(pillarnormals);
   
  const outterPillar3 = [
   // front
@@ -171,6 +155,7 @@ const pillarPoints2 = [
   new Rectangle(new Point(...pillarPoints3[0]), new Point(...pillarPoints3[3]), new Point(...pillarPoints3[5]), new Point(...pillarPoints3[4])),
 ];
 pyramid = pyramid.concat(outterPillar3);
+pyramidnormals = pyramidnormals.concat(pillarnormals);
 
 const outterPillar4 = [
   // front
@@ -193,6 +178,7 @@ const outterPillar4 = [
   new Rectangle(new Point(...pillarPoints4[0]), new Point(...pillarPoints4[3]), new Point(...pillarPoints4[5]), new Point(...pillarPoints4[4])),
 ];
 pyramid = pyramid.concat(outterPillar4);
+pyramidnormals = pyramidnormals.concat(pillarnormals);
   
   
   const depthOutterPillar1 = [
@@ -216,6 +202,7 @@ pyramid = pyramid.concat(outterPillar4);
     new Rectangle(new Point(...depthOutterPillarPoints[0]), new Point(...depthOutterPillarPoints[3]), new Point(...depthOutterPillarPoints[5]), new Point(...depthOutterPillarPoints[4])),
   ];
   pyramid = pyramid.concat(depthOutterPillar1);
+  pyramidnormals = pyramidnormals.concat(pillarnormals);
 
   const depthOutterPilar2 = depthOutterPillar1.map((rectangle) => {
     return new Rectangle(
@@ -227,6 +214,7 @@ pyramid = pyramid.concat(outterPillar4);
   });
 
   pyramid = pyramid.concat(depthOutterPilar2);
+  pyramidnormals = pyramidnormals.concat(pillarnormals);
 
     const horizontalOutterPillarPoints = [
       // consist of 8 points
@@ -261,6 +249,7 @@ pyramid = pyramid.concat(outterPillar4);
     new Rectangle(new Point(...horizontalOutterPillarPoints[0]), new Point(...horizontalOutterPillarPoints[3]), new Point(...horizontalOutterPillarPoints[5]), new Point(...horizontalOutterPillarPoints[4])),
   ];
   pyramid = pyramid.concat(horizontalOutterPillar1);
+  pyramidnormals = pyramidnormals.concat(pillarnormals);
 
   const horizontalOutterPilar3 = horizontalOutterPillar1.map((rectangle) => {
     return new Rectangle(
@@ -272,5 +261,6 @@ pyramid = pyramid.concat(outterPillar4);
   });
 
   pyramid = pyramid.concat(horizontalOutterPilar3);
+  pyramidnormals = pyramidnormals.concat(pillarnormals);
 
 export { pyramid, pyramidnormals } ;

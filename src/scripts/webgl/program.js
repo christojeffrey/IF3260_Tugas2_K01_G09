@@ -1,8 +1,10 @@
-import { error } from "./utils.js";
-function loadShader(gl, shaderSource, shaderType, opt_errorCallback) {
+import { error } from "../utils/error.js";
+
+async function loadShader(gl, source, shaderType, opt_errorCallback) {
   const errFn = opt_errorCallback || error;
   // Create the shader object
-  const shader = gl.createShader(shaderType);
+  const shaderSource  = await fetchShader(source);
+  const shader        = gl.createShader(shaderType);
 
   // Load the shader source
   gl.shaderSource(shader, shaderSource);
@@ -32,10 +34,14 @@ function loadShader(gl, shaderSource, shaderType, opt_errorCallback) {
 
   return shader;
 }
-import { vSource, fSource } from "./source.js";
-function createProgram(gl, opt_attribs, opt_locations, opt_errorCallback) {
-  const vShader = loadShader(gl, vSource, gl.VERTEX_SHADER, opt_errorCallback);
-  const fShader = loadShader(gl, fSource, gl.FRAGMENT_SHADER, opt_errorCallback);
+async function fetchShader(source) {
+  const response = await fetch("./scripts/webgl/shaders/" + source);
+  return await response.text();
+}
+
+async function createProgram(gl, opt_attribs, opt_locations, opt_errorCallback) {
+  const vShader = await loadShader(gl, "vertex.glsl", gl.VERTEX_SHADER, opt_errorCallback);
+  const fShader = await loadShader(gl, "fragment.glsl", gl.FRAGMENT_SHADER, opt_errorCallback);
 
   const shaders = [vShader, fShader];
   const errFn = opt_errorCallback || error;

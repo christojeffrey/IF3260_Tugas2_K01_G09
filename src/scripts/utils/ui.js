@@ -132,8 +132,6 @@ function setupCanvasListener(state, defaultState) {
   canvasElmt.addEventListener("mousemove", (e) => {
       if (!holding) return;
 
-      // if (!e.clientX || !e.clientY) return;
-
       let dx = e.clientX - mouse[0];
       let dy = e.clientY - mouse[1];
       mouse = [e.clientX, e.clientY];
@@ -157,8 +155,8 @@ function setupCanvasListener(state, defaultState) {
       state.rotation[0]   = degToRad(degreeX);
       state.rotation[1]   = degToRad(degreeY);
 
-      document.querySelector("#rotateX").value = degreeX;
-      document.querySelector("#rotateY").value = degreeY;
+      document.querySelector("#rotateX").value = parseFloat(degreeX);
+      document.querySelector("#rotateY").value = parseFloat(degreeY);
 
       document.querySelector("#rotateXValue").textContent = Math.round(degreeX);
       document.querySelector("#rotateYValue").textContent = Math.round(degreeY);

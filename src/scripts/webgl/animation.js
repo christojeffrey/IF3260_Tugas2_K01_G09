@@ -1,7 +1,9 @@
 import { radToDeg, degToRad } from "../math/math.js";
 
 const ANIMATION_SPEED   =  0.3; // degrees per second
-let mulX, mulY, mulZ    =  1;
+let mulX                =  1;
+let mulY                =  1;
+let mulZ                =  1;
 
 function animate(objectsConditions) {
     let angleX  = radToDeg(objectsConditions.rotation[0]);

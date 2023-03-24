@@ -4,39 +4,155 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
     <title>WebGL - 3D Step 6 - Use Depth Buffer</title>
-    <link type="text/css" href="styles.css" rel="stylesheet" />
+    <link type="text/css" href="styles/styles.css" rel="stylesheet" />
   </head>
   <body>
-    <div id="top-bar">
+    <!-- <div id="top-bar">
       top bar
-      <!-- export import button -->
-      <button id="export">Export</button>
-      <!-- import will take json file -->
-      <input type="file" id="importFile" accept=".json" />
-      <!-- import button -->
-      <button id="import">Import</button>
-      <!-- clear canvas -->
-      <button id="clear">Clear</button>
-      <!-- animation toggle -->
-      <input type="checkbox" id="animate" />
-      <label for="animate">animate</label>
-    </div>
+
+    </div> -->
     <div id="main-container">
+      
+      <div id="left-bar">
+        <h3 id="title">File</h3>
+        <div style="text-align: center;">
+          <!-- export import button -->
+          <button id="export" class="button">Export</button>
+          <!-- import will take json file -->
+          <input type="file" id="import" class="upload" accept=".json" />
+          <label for="import" class="custom-file-upload">
+            <i class="fa fa-cloud-upload"></i> Import
+          </label>
+        </div>
+        <h3 id="title">Canvas</h3>
+        <div style="text-align: center;">
+          <div>
+            <button id="clear" class="button">Clear</button>
+          </div>
+          <div >
+            <button id="reset" class="button">Reset</button>
+          </div>
+        </div>
+        <!-- animation toggle -->
+        <div style="padding-left: 2vw; margin-bottom: 2vh; margin-top: 4vh;">
+          <input type="checkbox" id="animate" />
+          <label for="animate" id="label">Animate</label>
+        </div>
+        <!-- shadding toggle -->
+        <div style="padding-left: 2vw; ">
+          <input type="checkbox" id="shading" checked />
+          <label for="shading" id="label">Shading</label>
+        </div>
+        <div style="text-align: center;"> 
+          <button id="help" class="button" style="margin-top: 4vh;">Help</button>
+        </div>
+      </div>
       <canvas id="canvas"></canvas>
       <div id="right-bar">
-        <div id="ui">
-          <div id="x"></div>
-          <div id="y"></div>
-          <div id="z"></div>
-          <div id="angleX"></div>
-          <div id="angleY"></div>
-          <div id="angleZ"></div>
-          <div id="scaleX"></div>
-          <div id="scaleY"></div>
-          <div id="scaleZ"></div>
+        <!-- Model Selector -->
+        <h3 id="title">Model</h3>
+        <div style="padding-left: 1.7rem;">
+          <input type="radio" id="tessaract" name="model" value="tessaract" />
+          <label for="tessaract">Tessaract</label>
+        </div>
+        <div style="padding-left: 1.7rem;">
+          <input type="radio" id="rubic" name="model" value="rubic" checked />
+          <label for="rubic">Rubic</label>
+        </div>
+        <div style="padding-left: 1.7rem;">
+          <input type="radio" id="pyramid" name="model" value="pyramid" />
+          <label for="pyramid">Pyramid</label>
+        </div>
+        <!-- Projection Selector -->
+        <h3 id="title">Projection</h3>
+        <div style="padding-left: 1.7rem;">
+          <input type="radio" id="orthographic" name="projection" value="orthographic" checked />
+          <label for="orthographic">Orthographic</label>
+        </div>
+        <div style="padding-left: 1.7rem;">
+          <input type="radio" id="oblique" name="projection" value="oblique" />
+          <label for="radio">Oblique</label>
+        </div>
+        <div style="padding-left: 1.7rem;">
+          <input type="radio" id="perspective" name="projection" value="perspective" />
+          <label for="perspective">Perspective</label>
+        </div>
+        <h3 id="title">Oblique</h3>
+        <div style="padding-left: 0.4rem;">
+          <label>Angle</label>
+          <input type="range" id="obliqueAngle" min="15" max="75" value="45" />
+          <label id="obliqueAngleValue">45</label>
+        </div>
+        <div style="padding-left: 1rem;">
+          <label>FoV</label>
+          <input type="range" id="foV" min="30" max="150" value="60" />
+          <label id="foVValue">60</label>
+        </div>
+        <!-- Translate Selector -->
+        <h3 id="title">Translate</h3>
+        <div style="padding-left: 2.2rem;">
+          <label>X</label>
+          <input type="range" id="translateX" min="-100" max="100" value="0" />
+          <label id="translateXValue">0</label>
+        </div>
+        <div style="padding-left: 2.2rem;"> 
+          <label>Y</label>
+          <input type="range" id="translateY" min="-100" max="100" value="0" />
+          <label id="translateYValue">0</label>
+        </div>
+        <div style="padding-left: 2.2rem;">
+          <label>Z</label>
+          <input type="range" id="translateZ" min="-100" max="100" value="0" />
+          <label id="translateZValue">0</label>
+        </div>
+        <!-- Rotate Selector -->
+        <h3 id="title">Rotate</h3>
+        <div style="padding-left: 2.2rem;">
+          <label>X</label>
+          <input type="range" id="rotateX" min="0" max="360" value="0" />
+          <label id="rotateXValue">0</label>
+        </div>
+        <div style="padding-left: 2.2rem;">
+          <label>Y</label>
+          <input type="range" id="rotateY" min="0" max="360" value="0" />
+          <label id="rotateYValue">0</label>
+        </div>
+        <div style="padding-left: 2.2rem;">
+          <label>Z</label>
+          <input type="range" id="rotateZ" min="0" max="360" value="0" />
+          <label id="rotateZValue">0</label>
+        </div>
+        <!-- Scale Selector -->
+        <h3 id="title">Scale</h3>
+        <div style="padding-left: 2.2rem;">
+          <label>X</label>
+          <input type="range" id="scaleX" min="0" max="3" value="1" />
+          <label id="scaleXValue">1</label>
+        </div>
+        <div style="padding-left: 2.2rem;">
+          <label>Y</label>
+          <input type="range" id="scaleY" min="0" max="3" value="1" />
+          <label id="scaleYValue">1</label>
+        </div>
+        <div>
+          <label style="padding-left: 2.2rem;">Z</label>
+          <input type="range" id="scaleZ" min="0" max="3" value="1" />
+          <label id="scaleZValue">1</label>
+        </div>
+        <!-- Camera Selector -->
+        <h3 id="title">Camera</h3>
+        <div>
+          <label>Radius</label>
+          <input type="range" id="radius" min="-100" max="100" value="0" />
+          <label id="radiusValue">0</label>
+        </div>
+        <div style="padding-left: 0.4rem;">
+          <label>Angle</label>
+          <input type="range" id="angle" min="0" max="360" value="0" />
+          <label id="angleValue">0</label>
         </div>
       </div>
     </div>
   </body>
-  <script src="main.js" type="module" defer></script>
+  <script src="scripts/main.js" type="module" defer></script>
 </html>

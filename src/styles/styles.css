@@ -1,6 +1,5 @@
 body {
-  background-color: #aaa;
-  font-family: Sans-Serif;
+  font-family: Lato, Helvetica, sans-serif;
   margin: 0;
   padding: 0;
   display: flex;
@@ -9,38 +8,84 @@ body {
 }
 #top-bar {
   /* black strip on top */
-  background-color: #000;
-  color: #fff;
+  height: 10%;
   font-size: 1.2em;
   padding: 10px;
+  border-bottom: 1px solid #000;
 }
 #main-container {
   display: flex;
   flex-direction: row;
   margin: 0;
   padding: 0;
-  background-color: aqua;
   /* fill the whole width and height */
-  width: 100%;
   height: 100%;
 }
 #canvas {
   background-color: #fff;
-  width: 85%;
+}
+
+#right-bar, #left-bar {
+  width: 15vw;
+  padding-left: 10px;
+  padding-right: 10px;
+  font-size: 0.9rem;
+}
+
+#left-bar {
+  border-right: 1px solid #000;
 }
 
 #right-bar {
-  width: 15%;
-  background-color: #afafaf;
-  font-family: monospace;
-  pointer-events: none;
+  border-left: 1px solid #000;
 }
+
+#title {
+  text-align: center;
+  font-weight: normal;
+  font-size: 1rem;
+}
+
+.button {
+  border: none;
+  color: white;
+  width: 8rem;
+  height: 2rem;
+  background-color: red;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+}
+
+.upload {
+  display: none;
+}
+
+.custom-file-upload {
+  border: none;
+  color: white;
+  width: 8rem;
+  height: 1rem;
+  background-color: red;
+  padding-top: 0.75vh;
+  padding-bottom: 0.75vh;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+}
+
 #ui {
   opacity: 0.8;
 }
-#ui > div {
+/* #ui > div {
   pointer-events: none;
-}
+} */
 #ui input,
 #ui label,
 #ui select,
@@ -90,3 +135,4 @@ body {
 .gman-widget-slider {
   min-width: 120px;
 }
+

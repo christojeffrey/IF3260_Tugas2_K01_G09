@@ -77,9 +77,7 @@ export const m4 = {
 
     let m = m4.identity();
     m     = m4.translate(m, x, y, z);
-    m     = m4.xRotate(m, angleX);
-    m     = m4.yRotate(m, angleY);
-    m     = m4.zRotate(m, angleZ);
+    m     = m4.rotate(m, angleX, angleY, angleZ);
     m     = m4.scale(m, scaleX, scaleY, scaleZ);
 
     return m;
@@ -200,6 +198,13 @@ export const m4 = {
              0, 0, 0, 1];
   },
 
+  rotation: function (angleXInRadians, angleYInRadians, angleZInRadians) {
+    let x = m4.xRotation(angleXInRadians);
+    let y = m4.yRotation(angleYInRadians);
+    let z = m4.zRotation(angleZInRadians);
+    return m4.multiply(m4.multiply(x, y), z);
+  },
+
   scaling: function (sx, sy, sz) {
     return [sx, 0,  0,  0,
              0, sy, 0,  0,
@@ -224,12 +229,7 @@ export const m4 = {
   },
 
   rotate: function (m, angleXInRadians, angleYInRadians, angleZInRadians) {
-    return m4.multiply(
-              m4.multiply(
-                 m4.multiply(m, 
-                             m4.xRotation(angleXInRadians)), 
-                 m4.yRotation(angleYInRadians)), 
-              m4.zRotation(angleZInRadians));
+    return m4.multiply(m, m4.rotation(angleXInRadians, angleYInRadians, angleZInRadians));
   },
 
   scale: function (m, sx, sy, sz) {

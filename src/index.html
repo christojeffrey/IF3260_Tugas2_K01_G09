@@ -34,12 +34,12 @@
           </div>
         </div>
         <!-- animation toggle -->
-        <div style="padding-left: 1rem; margin-bottom: 2vh; margin-top: 4vh;">
+        <div style="padding-left: 2vw; margin-bottom: 2vh; margin-top: 4vh;">
           <input type="checkbox" id="animate" />
           <label for="animate" id="label">Animate</label>
         </div>
         <!-- shadding toggle -->
-        <div style="padding-left: 1rem; ">
+        <div style="padding-left: 2vw; ">
           <input type="checkbox" id="shading" checked />
           <label for="shading" id="label">Shading</label>
         </div>
@@ -76,6 +76,17 @@
         <div style="padding-left: 1.7rem;">
           <input type="radio" id="perspective" name="projection" value="perspective" />
           <label for="perspective">Perspective</label>
+        </div>
+        <h3 id="title">Oblique</h3>
+        <div style="padding-left: 0.4rem;">
+          <label>Angle</label>
+          <input type="range" id="obliqueAngle" min="15" max="75" value="45" />
+          <label id="obliqueAngleValue">45</label>
+        </div>
+        <div style="padding-left: 1rem;">
+          <label>FoV</label>
+          <input type="range" id="foV" min="30" max="150" value="60" />
+          <label id="foVValue">60</label>
         </div>
         <!-- Translate Selector -->
         <h3 id="title">Translate</h3>
@@ -135,10 +146,10 @@
           <input type="range" id="radius" min="-100" max="100" value="0" />
           <label id="radiusValue">0</label>
         </div>
-        <div>
-          <label>Angles</label>
-          <input type="range" id="angles" min="0" max="360" value="0" />
-          <label id="anglesValue">0</label>
+        <div style="padding-left: 0.4rem;">
+          <label>Angle</label>
+          <input type="range" id="angle" min="0" max="360" value="0" />
+          <label id="angleValue">0</label>
         </div>
       </div>
     </div>

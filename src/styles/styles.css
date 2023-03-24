@@ -26,18 +26,17 @@ body {
 }
 
 #right-bar, #left-bar {
+  width: 15vw;
   padding-left: 10px;
   padding-right: 10px;
   font-size: 0.9rem;
 }
 
 #left-bar {
-  width: 25vh;
   border-right: 1px solid #000;
 }
 
 #right-bar {
-  width: 40vh;
   border-left: 1px solid #000;
 }
 
@@ -50,8 +49,8 @@ body {
 .button {
   border: none;
   color: white;
-  width: 11vh;
-  height: 5vh;
+  width: 8rem;
+  height: 2rem;
   background-color: red;
   text-align: center;
   text-decoration: none;
@@ -68,10 +67,11 @@ body {
 .custom-file-upload {
   border: none;
   color: white;
-  width: 11vh;
-  height: 4vh;
+  width: 8rem;
+  height: 1rem;
   background-color: red;
-  padding-top: 10px;
+  padding-top: 0.75vh;
+  padding-bottom: 0.75vh;
   text-align: center;
   text-decoration: none;
   display: inline-block;

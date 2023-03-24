@@ -1,7 +1,8 @@
 import { cs } from "../constant/cs.js";
+import { degToRad } from "./math.js"
 
 export const m4 = {
-  projection(radius, type) {
+  projection(radius, angle, type) {
     let aspect  = (cs.width/2) / (cs.height/2);
 
     let top     = -(cs.height/2 + -radius);
@@ -27,7 +28,7 @@ export const m4 = {
           tx, ty, tz,  1
         ]
       case "oblique":
-        let s       = 1;
+        let s       = 1/Math.tan(degToRad(angle))
         let cs      = c * s;
         let stz     = tz * s;
         return [

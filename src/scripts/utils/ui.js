@@ -17,7 +17,8 @@ function setupUI(gl) {
   let rotation          = [degToRad(0), degToRad(0), degToRad(0)];
   let translation       = [0, 0, 0];
   let scale             = [1, 1, 1];
-  let camera            = {radius: 0, angles: degToRad(0)}
+  // let angle             =
+  let camera            = {radius: 0, angle: degToRad(0)}
   let shading           = true;
   let animate           = false;
 
@@ -47,7 +48,7 @@ function setupUI(gl) {
     scale         : [...defaultState.scale],
     camera        : {
       radius      : defaultState.camera.radius,
-      angles      : defaultState.camera.angles
+      angle      : defaultState.camera.angle
     },
     shading       : defaultState.shading,
     animate       : defaultState.animate
@@ -194,7 +195,7 @@ function setupCanvasListener(state, defaultState) {
     state.scale             = [...defaultState.scale];
     state.camera            = {
       radius      : defaultState.camera.radius,
-      angles      : defaultState.camera.angles
+      angle      : defaultState.camera.angle
     };
     state.shading           = defaultState.shading;
     state.animate           = defaultState.animate;
@@ -266,11 +267,11 @@ function setupCanvasListener(state, defaultState) {
     let radiusValueElmt               = document.querySelector("#radiusValue");
     radiusValueElmt.textContent       = state.camera.radius;
 
-    let anglesElmt                    = document.querySelector("#angles");
-    anglesElmt.value                  = state.camera.angles;
+    let angleElmt                     = document.querySelector("#angle");
+    angleElmt.value                   = state.camera.angle;
 
-    let anglesValueElmt               = document.querySelector("#anglesValue");
-    anglesValueElmt.textContent       = state.camera.angles;
+    let angleValueElmt                = document.querySelector("#angleValue");
+    angleValueElmt.textContent        = state.camera.angle;
 
     let animateElmt                   = document.querySelector("#animate");
     animateElmt.checked               = state.animate;
@@ -508,9 +509,9 @@ function setupCameraListener(state) {
     updateRadius(e, { value: e.target.value });
   });
 
-  let anglesElmt = document.querySelector("#angles");
-  anglesElmt.addEventListener("input", (e) => {
-    updateAngles(e, { value: e.target.value });
+  let angleElmt = document.querySelector("#angle");
+  angleElmt.addEventListener("input", (e) => {
+    updateAngle(e, { value: e.target.value });
   });
 
   function updateRadius(_, ui) {
@@ -520,11 +521,11 @@ function setupCameraListener(state) {
     radiusElmt.value                  = ui.value;
   }
 
-  function updateAngles(_, ui) {
-    state.camera.angles   = degToRad(ui.value);
-    let anglesValueELmt               = document.querySelector("#anglesValue");
-    anglesValueELmt.textContent       = ui.value;
-    anglesElmt.value                  = ui.value;
+  function updatAangle(_, ui) {
+    state.camera.angle                = degToRad(ui.value);
+    let angleValueELmt               = document.querySelector("#angleValue");
+    angleValueELmt.textContent       = ui.value;
+    angleElmt.value                  = ui.value;
   }
 }
 

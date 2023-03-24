@@ -89,10 +89,10 @@ function drawScene(gl, program, buffers, state) {
     gl.vertexAttribPointer(normalLocation, size, type, normalize, stride, offset);
   
     // Compute the matrices
-    // var matrix = m4.projection(gl.canvas.clientWidth, gl.canvas.clientHeight, 2000, "oblique");
-    let matrixProjection  = m4.projection(camera.radius, state.projection);
+    console.log(state.projection)
+    let matrixProjection  = m4.projection(camera.radius, 15, state.projection);
     let matrixTransform   = m4.transform(translation, rotation, scale);
-    let matrixView        = m4.view(camera.angles, camera.radius);
+    let matrixView        = m4.view(camera.angle, camera.radius);
 
     let matrix            = m4.multiply(m4.multiply(matrixProjection, matrixTransform), matrixView)
     let world             = m4.multiply(m4.multiply(matrixProjection, matrixView), matrixTransform);

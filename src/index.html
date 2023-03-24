@@ -12,8 +12,21 @@
 
     </div> -->
     <div id="main-container">
-      
       <div id="left-bar">
+        <!-- Model Selector -->
+        <h3 id="title">Model</h3>
+        <div style="padding-left: 1.7rem;">
+          <input type="radio" id="tessaract" name="model" value="tessaract" />
+          <label for="tessaract">Tessaract</label>
+        </div>
+        <div style="padding-left: 1.7rem;">
+          <input type="radio" id="rubic" name="model" value="rubic" checked />
+          <label for="rubic">Rubic</label>
+        </div>
+        <div style="padding-left: 1.7rem;">
+          <input type="radio" id="pyramid" name="model" value="pyramid" />
+          <label for="pyramid">Pyramid</label>
+        </div>
         <h3 id="title">File</h3>
         <div style="text-align: center;">
           <!-- export import button -->
@@ -49,24 +62,10 @@
       </div>
       <canvas id="canvas"></canvas>
       <div id="right-bar">
-        <!-- Model Selector -->
-        <h3 id="title">Model</h3>
-        <div style="padding-left: 1.7rem;">
-          <input type="radio" id="tessaract" name="model" value="tessaract" />
-          <label for="tessaract">Tessaract</label>
-        </div>
-        <div style="padding-left: 1.7rem;">
-          <input type="radio" id="rubic" name="model" value="rubic" checked />
-          <label for="rubic">Rubic</label>
-        </div>
-        <div style="padding-left: 1.7rem;">
-          <input type="radio" id="pyramid" name="model" value="pyramid" />
-          <label for="pyramid">Pyramid</label>
-        </div>
         <!-- Projection Selector -->
         <h3 id="title">Projection</h3>
         <div style="padding-left: 1.7rem;">
-          <input type="radio" id="orthographic" name="projection" value="orthographic" checked />
+          <input type="radio" id="orthographic" name="projection" value="orthographic" checked/>
           <label for="orthographic">Orthographic</label>
         </div>
         <div style="padding-left: 1.7rem;">
@@ -77,17 +76,18 @@
           <input type="radio" id="perspective" name="projection" value="perspective" />
           <label for="perspective">Perspective</label>
         </div>
-        <h3 id="title">Oblique</h3>
-        <div style="padding-left: 0.4rem;">
+        <h3 id="title" name="projectionMenu">Orthographic</h3>
+        <div style="padding-left: 0.4rem; display: none;" id="obliqueMenu">
           <label>Angle</label>
-          <input type="range" id="obliqueAngle" min="15" max="75" value="45" />
+          <input type="range" id="obliqueAngle" min="30" max="75" value="45" />
           <label id="obliqueAngleValue">45</label>
         </div>
-        <div style="padding-left: 1rem;">
+        <div style="padding-left: 1rem; display: none;" id="perspectiveMenu">
           <label>FoV</label>
-          <input type="range" id="foV" min="30" max="150" value="60" />
-          <label id="foVValue">60</label>
+          <input type="range" id="perspectiveFoV" min="30" max="150" value="60" />
+          <label id="perspectiveFoVValue">60</label>
         </div>
+        <div id="space" style="height: 22px; text-align: center;">Not Provide</div>
         <!-- Translate Selector -->
         <h3 id="title">Translate</h3>
         <div style="padding-left: 2.2rem;">
@@ -143,8 +143,8 @@
         <h3 id="title">Camera</h3>
         <div>
           <label>Radius</label>
-          <input type="range" id="radius" min="-100" max="100" value="0" />
-          <label id="radiusValue">0</label>
+          <input type="range" id="radius" min="10" max="100" value="10" />
+          <label id="radiusValue">10</label>
         </div>
         <div style="padding-left: 0.4rem;">
           <label>Angle</label>

@@ -6,13 +6,6 @@ body {
   flex-direction: column;
   height: 100vh;
 }
-#top-bar {
-  /* black strip on top */
-  height: 10%;
-  font-size: 1.2em;
-  padding: 10px;
-  border-bottom: 1px solid #000;
-}
 #main-container {
   display: flex;
   flex-direction: row;
@@ -26,17 +19,18 @@ body {
 }
 
 #right-bar, #left-bar {
-  width: 15vw;
   padding-left: 10px;
   padding-right: 10px;
   font-size: 0.9rem;
 }
 
 #left-bar {
+  width: 15vw;
   border-right: 1px solid #000;
 }
 
 #right-bar {
+  width: 18rem;
   border-left: 1px solid #000;
 }
 
@@ -70,8 +64,8 @@ body {
   width: 8rem;
   height: 1rem;
   background-color: red;
-  padding-top: 0.75vh;
-  padding-bottom: 0.75vh;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
   text-align: center;
   text-decoration: none;
   display: inline-block;

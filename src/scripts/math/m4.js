@@ -1,16 +1,17 @@
 import { cs } from "../constant/cs.js";
 import { degToRad } from "./math.js"
+import { v3 } from "./v3.js"
 
 export const m4 = {
-  projection(radius, angle, type) {
+  projection(radius, angle, foV, type) {
     let aspect  = (cs.width/2) / (cs.height/2);
 
-    let top     = -(cs.height/2 + -radius);
-    let bottom  =  (cs.height/2 + -radius);
+    let top     = type == "orthographic" ? -(cs.height/2 -radius) : -(cs.height/2);
+    let bottom  = type == "orthographic" ?  (cs.height/2 -radius) :  (cs.height/2);
     let left    =  (aspect * top)
     let right   = -(aspect * top);
-    let near    =    cs.depth * 1.75;
-    let far     =   -cs.depth * 1.75;
+    let near    =    cs.depth;
+    let far     =   -cs.depth;
 
     let a       = 2 / (right - left);
     let b       = 2 / (top - bottom);
@@ -38,36 +39,49 @@ export const m4 = {
           tx + stz, ty + stz, stz,  1
         ]
       case "perspective":
-        let f       = 4.5; 
+        near        = 1;
+        far         = far * -1;
+        let f       = Math.tan(Math.PI * 0.5 - 0.5 * degToRad(foV));
+        let rInv    = 1.0 / (near - far);
 
-        let cf      = c * f;
-        let ftz     = f * tz;
         return [
-           a,  0,  0,    0   ,
-           0,  b,  0,    0   ,
-           0,  0,  c,   cf   ,
-          tx, ty, tz, ftz + 1
+          f / aspect,  0,                             0                        ,          0,
+               0    , -f,                             0                        ,          0,
+               0    ,  0,               -(far + near) * rInv                   ,          1,
+               0    ,  0,  (-0.3 * far * far * rInv) + (17 * far * near * rInv),  0.3 * far
         ]
       default:
         throw new Error("unknown projection type");
     }
   },
-
-  identity: function() {
+  
+  lookAt(cameraPosition, target, up) {
+    let zAxis = v3.normalize(
+                   v3.substract(
+                      cameraPosition, target
+                  )
+                );
+    let xAxis = v3.normalize(
+                   v3.cross(
+                      up, zAxis
+                  )
+                );
+    let yAxis = v3.cross(zAxis, xAxis);
+  
     return [
-      1, 0, 0, 0,
-      0, 1, 0, 0,
-      0, 0, 1, 0,
-      0, 0, 0, 1,
+               xAxis[0],          xAxis[1],          xAxis[2], 0,
+               yAxis[0],          yAxis[1],          yAxis[2], 0,
+               zAxis[0],          zAxis[1],          zAxis[2], 0,
+      cameraPosition[0], cameraPosition[1], cameraPosition[2], 1,
     ];
   },
 
   view(angleInRadians, radius) {
-    let f          = m4.yRotation(angleInRadians);
-    let translateZ = m4.translation(0, 0, radius);
-    let camera     = m4.multiply(f, translateZ);
+    let rotateY    = m4.yRotation(angleInRadians);
+    let translateZ = m4.translation(0, 0, radius * 1.5);
+    let camera     = m4.multiply(rotateY, translateZ);
 
-    return m4.inverse(camera);
+    return camera;
   },
 
   transform(translation, rotation, scale) {
@@ -82,6 +96,15 @@ export const m4 = {
     m     = m4.scale(m, scaleX, scaleY, scaleZ);
 
     return m;
+  },
+
+  identity: function() {
+    return [
+      1, 0, 0, 0,
+      0, 1, 0, 0,
+      0, 0, 1, 0,
+      0, 0, 0, 1,
+    ];
   },
 
   multiply: function(a, b) {
@@ -160,6 +183,13 @@ export const m4 = {
         d * ((tmp_18 * m12 + tmp_23 * m32 + tmp_15 * m02) - (tmp_22 * m32 + tmp_14 * m02 + tmp_19 * m12)),
         d * ((tmp_22 * m22 + tmp_16 * m02 + tmp_21 * m12) - (tmp_20 * m12 + tmp_23 * m22 + tmp_17 * m02)),
     ];
+  },
+
+  transpose: function (m) {
+    return [m[0], m[4], m[ 8], m[12],
+            m[1], m[5], m[ 9], m[13],
+            m[2], m[6], m[10], m[14],
+            m[3], m[7], m[11], m[15]];
   },
 
   translation: function (tx, ty, tz) {

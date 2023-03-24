@@ -5,82 +5,122 @@ import pyramid from "../models/pyramid.js";
 import tessaract from "../models/tessaract.js";
 
 function setupUI(gl) {
-  let object = {
-    name: "rubic",
-    positions: rubic.position,
-    colors: rubic.colors,
-    normals: rubic.normals,
+  let object            = {
+    name        : "rubic",
+    positions   : rubic.position,
+    colors      : rubic.colors,
+    normals     : rubic.normals,
   };
 
-  let totalVertices = object.positions.length / 3;
-  let projection = "orthographic";
-  let rotation = [degToRad(0), degToRad(0), degToRad(0)];
-  let translation = [0, 0, 0];
-  let scale = [1, 1, 1];
-  // let angle             =
-  let camera = { radius: 0, angle: degToRad(0) };
-  let shading = true;
-  let animate = false;
+  let totalVertices     = object.positions.length / 3;
+  let projection        = "orthographic";
+  let obliqueAngle      = 45;
+  let perspectiveFoV    = 60;
+  let rotation          = [degToRad(0), degToRad(0), degToRad(0)];
+  let translation       = [0, 0, 0];
+  let scale             = [1, 1, 1];
+  let camera            = {radius: 10, angle: degToRad(0)}
+  let shading           = true;
+  let animate           = false;
 
   let defaultState = {
-    object,
+    object, 
     totalVertices,
-    projection,
-    rotation,
-    translation,
-    scale,
+    projection, 
+    obliqueAngle,
+    perspectiveFoV,
+    rotation, 
+    translation, 
+    scale, 
     camera,
-    shading,
-    animate,
+    shading, 
+    animate 
   };
 
-  let state = {
-    object: {
-      name: defaultState.object.name,
-      positions: defaultState.object.positions,
-      colors: defaultState.object.colors,
-      normals: defaultState.object.normals,
+  let state  = {
+    object        : {
+      name        : defaultState.object.name,
+      positions   : defaultState.object.positions,
+      colors      : defaultState.object.colors,
+      normals     : defaultState.object.normals,
     },
-    totalVertices: defaultState.totalVertices,
-    projection: defaultState.projection,
-    rotation: [...defaultState.rotation],
-    translation: [...defaultState.translation],
-    scale: [...defaultState.scale],
-    camera: {
-      radius: defaultState.camera.radius,
-      angle: defaultState.camera.angle,
+    totalVertices : defaultState.totalVertices,
+    projection    : defaultState.projection,
+    obliqueAngle  : defaultState.obliqueAngle,
+    perspectiveFoV: defaultState.perspectiveFoV,
+    rotation      : [...defaultState.rotation],
+    translation   : [...defaultState.translation],
+    scale         : [...defaultState.scale],
+    camera        : {
+      radius      : defaultState.camera.radius,
+      angle       : defaultState.camera.angle
     },
-    shading: defaultState.shading,
-    animate: defaultState.animate,
+    shading       : defaultState.shading,
+    animate       : defaultState.animate
   };
 
   // Set canvas size
   resizeCanvasToDisplaySize(gl.canvas);
 
   // Left bar listeners
+  setupModelListener(state);
   setupAnimationListener(state);
   setupFileListener(state);
   setupCanvasListener(state, defaultState);
   setupShadingListener(state);
-  setupHelpButton();
+  setupHelpListener();
 
   // Right bar listeners
-  setupModelListener(state);
   setupProjectionListener(state);
+  setupProjectionMenuListener(state);
   setupTranslateListener(state);
   setupRotationListener(state);
   setupScaleListener(state);
   setupCameraListener(state);
 
   window.addEventListener("resize", resizeCanvasToDisplaySize(gl.canvas));
-
+  
   return state;
+}
+
+function setupModelListener(state) {
+  let modelElmt = document.querySelectorAll("input[name=model]");
+  modelElmt.forEach((elmt) => {
+    elmt.addEventListener("change", (e) => {
+      updateModel(e);
+    });
+  });
+
+  function updateModel(e) {
+    let model = e.target.value;
+    console.log(model);
+    switch (model) {
+      case "tessaract":
+        state.object.name      = "tessaract";
+        state.object.positions = tessaract.position;
+        state.object.colors    = tessaract.colors;
+        state.object.normals   = tessaract.normals;
+        break;
+      case "rubic":
+        state.object.name      = "rubic";
+        state.object.positions = rubic.position;
+        state.object.colors    = rubic.colors;
+        state.object.normals   = rubic.normals;
+        break;
+      case "pyramid":
+        state.object.name      = "pyramid";
+        state.object.positions = pyramid.position;
+        state.object.colors    = pyramid.colors;
+        state.object.normals   = pyramid.normals;
+        break;
+    }
+  }
 }
 
 function setupFileListener(state) {
   let importElmt = document.querySelector("#import");
   importElmt.addEventListener("change", importData);
-
+    
   let exportElmt = document.querySelector("#export");
   exportElmt.addEventListener("click", exportData);
 
@@ -89,21 +129,21 @@ function setupFileListener(state) {
     let reader = new FileReader();
     reader.onload = function (e) {
       let data = JSON.parse(e.target.result);
-      state.object.positions = data.positions;
-      state.object.colors = data.colors;
-      state.object.normals = data.normals;
-      state.totalVertices = state.object.positions.length / 3;
+      state.object.positions  = data.positions;
+      state.object.colors     = data.colors;
+      state.object.normals    = data.normals;
+      state.totalVertices     = state.object.positions.length / 3;
     };
     reader.readAsText(file);
   }
 
   function exportData() {
     let data = {
-      name: state.object.name,
-      positions: state.object.positions,
-      colors: state.object.colors,
-      normals: state.object.normals,
-    };
+      name          : state.object.name,
+      positions     : state.object.positions,
+      colors        : state.object.colors,
+      normals       : state.object.normals,
+    }
     let json = JSON.stringify(data);
     let blob = new Blob([json], { type: "application/json" });
     let url = URL.createObjectURL(blob);
@@ -116,86 +156,85 @@ function setupFileListener(state) {
 }
 
 function setupCanvasListener(state, defaultState) {
-  let clearElmt = document.querySelector("#clear");
+  let clearElmt   = document.querySelector("#clear");
   clearElmt.addEventListener("click", clearCanvas);
 
-  let resetElmt = document.querySelector("#reset");
+  let resetElmt   = document.querySelector("#reset");
   resetElmt.addEventListener("click", resetCanvas);
 
-  let holding = false;
-  let mouse = [0, 0];
-  let canvasElmt = document.querySelector("#canvas");
+  let holding     = false;
+  let mouse       = [0, 0];
+  let canvasElmt  = document.querySelector("#canvas");
   canvasElmt.addEventListener("mousedown", (e) => {
-    if (holding) return;
+      if (holding) return;
 
-    holding = true;
-    mouse = [e.clientX, e.clientY];
+      holding = true;
+      mouse = [e.clientX, e.clientY];  
   });
   canvasElmt.addEventListener("mousemove", (e) => {
-    if (!holding) return;
+      if (!holding) return;
 
-    let dx = e.clientX - mouse[0];
-    let dy = e.clientY - mouse[1];
-    mouse = [e.clientX, e.clientY];
+      let dx = e.clientX - mouse[0];
+      let dy = e.clientY - mouse[1];
+      mouse = [e.clientX, e.clientY];
 
-    state.rotation[0] += dy * 0.005;
-    state.rotation[1] += dx * 0.005;
+      state.rotation[0] += dy * 0.005;
+      state.rotation[1] += dx * 0.005;
 
-    let degreeX = radToDeg(state.rotation[0]);
-    let degreeY = radToDeg(state.rotation[1]);
+      let degreeX             = radToDeg(state.rotation[0]);
+      let degreeY             = radToDeg(state.rotation[1]);
 
-    if (degreeX < 0) degreeX += 360;
-    else if (degreeX > 360) degreeX -= 360;
+      if (degreeX < 0) 
+        degreeX += 360;
+      else if (degreeX > 360)
+        degreeX -= 360;
 
-    if (degreeY < 0) degreeY += 360;
-    else if (degreeY > 360) degreeY -= 360;
+      if (degreeY < 0)
+        degreeY += 360;
+      else if (degreeY > 360)
+        degreeY -= 360;
 
-    state.rotation[0] = degToRad(degreeX);
-    state.rotation[1] = degToRad(degreeY);
+      state.rotation[0]   = degToRad(degreeX);
+      state.rotation[1]   = degToRad(degreeY);
 
-    document.querySelector("#rotateX").value = parseFloat(degreeX);
-    document.querySelector("#rotateY").value = parseFloat(degreeY);
+      document.querySelector("#rotateX").value = parseFloat(degreeX);
+      document.querySelector("#rotateY").value = parseFloat(degreeY);
 
-    document.querySelector("#rotateXValue").textContent = Math.round(degreeX);
-    document.querySelector("#rotateYValue").textContent = Math.round(degreeY);
+      document.querySelector("#rotateXValue").textContent = Math.round(degreeX);
+      document.querySelector("#rotateYValue").textContent = Math.round(degreeY);
   });
   canvasElmt.addEventListener("mouseup", (e) => {
-    holding = false;
+      holding = false;
   });
-  // function updateCanvas(e) {
-  //   let canvas = e.target.value;
-  //   if (canvas == "yes")
-  //     state.canvas = true;
-  //   else
-  //     state.canvas = false;
-  // }
 
   function clearCanvas() {
-    state.object.name = "none";
-    state.object.positions = [];
-    state.object.colors = [];
-    state.object.normals = [];
-    state.totalVertices = 0;
+    state.object.name       = "none";
+    state.object.positions  = [];
+    state.object.colors     = [];
+    state.object.normals    = [];
+    state.totalVertices     = 0;
   }
 
   function resetCanvas() {
-    state.object = {
-      name: defaultState.object.name,
-      positions: defaultState.object.positions,
-      colors: defaultState.object.colors,
-      normals: defaultState.object.normals,
+    state.object            = {
+      name        : defaultState.object.name,
+      positions   : defaultState.object.positions,
+      colors      : defaultState.object.colors,
+      normals     : defaultState.object.normals,
     };
-    state.totalVertices = defaultState.totalVertices;
-    state.projection = defaultState.projection;
-    state.rotation = [...defaultState.rotation];
-    state.translation = [...defaultState.translation];
-    state.scale = [...defaultState.scale];
-    state.camera = {
-      radius: defaultState.camera.radius,
-      angle: defaultState.camera.angle,
+    state.totalVertices     = defaultState.totalVertices;
+    state.projection        = defaultState.projection;
+    state.obliqueAngle      = defaultState.obliqueAngle;
+    state.perspectiveFoV    = defaultState.perspectiveFoV;
+    state.rotation          = [...defaultState.rotation];
+    state.translation       = [...defaultState.translation];
+    state.scale             = [...defaultState.scale];
+    state.camera            = {
+      radius      : defaultState.camera.radius,
+      angle       : defaultState.camera.angle
     };
-    state.shading = defaultState.shading;
-    state.animate = defaultState.animate;
+    state.shading           = defaultState.shading;
+    state.animate           = defaultState.animate;
 
     console.log(state);
 
@@ -204,7 +243,7 @@ function setupCanvasListener(state, defaultState) {
       if (modelElmt[i].value == state.object.name) {
         modelElmt[i].checked = true;
         break;
-      }
+      } 
     }
 
     let projectionElmt = document.querySelectorAll("input[name='projection']");
@@ -215,66 +254,67 @@ function setupCanvasListener(state, defaultState) {
       }
     }
 
-    let translateXElmt = document.querySelector("#translateX");
-    translateXElmt.value = state.translation[0];
+    let translateXElmt                = document.querySelector("#translateX");
+    translateXElmt.value              = state.translation[0];
     console.log(translateXElmt.value);
-    let translateYElmt = document.querySelector("#translateY");
-    translateYElmt.value = state.translation[1];
-    let translateZElmt = document.querySelector("#translateZ");
-    translateZElmt.value = state.translation[2];
+    let translateYElmt                = document.querySelector("#translateY");
+    translateYElmt.value              = state.translation[1];
+    let translateZElmt                = document.querySelector("#translateZ");
+    translateZElmt.value              = state.translation[2];
 
-    let translateXValueELmt = document.querySelector("#translateXValue");
-    translateXValueELmt.textContent = state.translation[0];
-    let translateYValueELmt = document.querySelector("#translateYValue");
-    translateYValueELmt.textContent = state.translation[1];
-    let translateZValueELmt = document.querySelector("#translateZValue");
-    translateZValueELmt.textContent = state.translation[2];
+    let translateXValueELmt           = document.querySelector("#translateXValue");
+    translateXValueELmt.textContent   = state.translation[0];
+    let translateYValueELmt           = document.querySelector("#translateYValue");
+    translateYValueELmt.textContent   = state.translation[1];
+    let translateZValueELmt           = document.querySelector("#translateZValue");
+    translateZValueELmt.textContent   = state.translation[2];
 
-    let rotateXElmt = document.querySelector("#rotateX");
-    rotateXElmt.value = state.rotation[0];
-    let rotateYElmt = document.querySelector("#rotateY");
-    rotateYElmt.value = state.rotation[1];
-    let rotateZElmt = document.querySelector("#rotateZ");
-    rotateZElmt.value = state.rotation[2];
+    let rotateXElmt                   = document.querySelector("#rotateX");
+    rotateXElmt.value                 = state.rotation[0];
+    let rotateYElmt                   = document.querySelector("#rotateY");
+    rotateYElmt.value                 = state.rotation[1];
+    let rotateZElmt                   = document.querySelector("#rotateZ");
+    rotateZElmt.value                 = state.rotation[2];
 
-    let rotateXValueELmt = document.querySelector("#rotateXValue");
-    rotateXValueELmt.textContent = state.rotation[0];
-    let rotateYValueELmt = document.querySelector("#rotateYValue");
-    rotateYValueELmt.textContent = state.rotation[1];
-    let rotateZValueELmt = document.querySelector("#rotateZValue");
-    rotateZValueELmt.textContent = state.rotation[2];
+    let rotateXValueELmt              = document.querySelector("#rotateXValue");
+    rotateXValueELmt.textContent      = state.rotation[0];
+    let rotateYValueELmt              = document.querySelector("#rotateYValue");
+    rotateYValueELmt.textContent      = state.rotation[1];
+    let rotateZValueELmt              = document.querySelector("#rotateZValue");
+    rotateZValueELmt.textContent      = state.rotation[2];
 
-    let scaleXElmt = document.querySelector("#scaleX");
-    scaleXElmt.value = state.scale[0];
-    let scaleYElmt = document.querySelector("#scaleY");
-    scaleYElmt.value = state.scale[1];
-    let scaleZElmt = document.querySelector("#scaleZ");
-    scaleZElmt.value = state.scale[2];
+    let scaleXElmt                    = document.querySelector("#scaleX");
+    scaleXElmt.value                  = state.scale[0];
+    let scaleYElmt                    = document.querySelector("#scaleY");
+    scaleYElmt.value                  = state.scale[1];
+    let scaleZElmt                    = document.querySelector("#scaleZ");
+    scaleZElmt.value                  = state.scale[2];
 
-    let scaleXValueELmt = document.querySelector("#scaleXValue");
-    scaleXValueELmt.textContent = state.scale[0];
-    let scaleYValueELmt = document.querySelector("#scaleYValue");
-    scaleYValueELmt.textContent = state.scale[1];
-    let scaleZValueELmt = document.querySelector("#scaleZValue");
-    scaleZValueELmt.textContent = state.scale[2];
+    let scaleXValueELmt               = document.querySelector("#scaleXValue");
+    scaleXValueELmt.textContent       = state.scale[0];
+    let scaleYValueELmt               = document.querySelector("#scaleYValue");
+    scaleYValueELmt.textContent       = state.scale[1];
+    let scaleZValueELmt               = document.querySelector("#scaleZValue");
+    scaleZValueELmt.textContent       = state.scale[2];
 
-    let radiusElmt = document.querySelector("#radius");
-    radiusElmt.value = state.camera.radius;
+    let radiusElmt                    = document.querySelector("#radius");
+    radiusElmt.value                  = state.camera.radius;
 
-    let radiusValueElmt = document.querySelector("#radiusValue");
-    radiusValueElmt.textContent = state.camera.radius;
+    let radiusValueElmt               = document.querySelector("#radiusValue");
+    radiusValueElmt.textContent       = state.camera.radius;
 
-    let angleElmt = document.querySelector("#angle");
-    angleElmt.value = state.camera.angle;
+    let angleElmt                     = document.querySelector("#angle");
+    angleElmt.value                   = state.camera.angle;
 
-    let angleValueElmt = document.querySelector("#angleValue");
-    angleValueElmt.textContent = state.camera.angle;
+    let angleValueElmt                = document.querySelector("#angleValue");
+    angleValueElmt.textContent        = state.camera.angle;
 
-    let animateElmt = document.querySelector("#animate");
-    animateElmt.checked = state.animate;
+    let animateElmt                   = document.querySelector("#animate");
+    animateElmt.checked               = state.animate;
 
-    let shadingElmt = document.querySelector("#shading");
-    shadingElmt.checked = state.shading;
+    let shadingElmt                   = document.querySelector("#shading");
+    shadingElmt.checked               = state.shading;
+
   }
 }
 
@@ -300,7 +340,7 @@ function setupShadingListener(state) {
   }
 }
 
-function setupHelpButton() {
+function setupHelpListener() {
   // onclick open help.html on the same window
   let helpButton = document.querySelector("#help");
   helpButton.addEventListener("click", (e) => {
@@ -319,40 +359,6 @@ function resizeCanvasToDisplaySize(canvas, multiplier) {
   cs.set(width, height, 2000);
 }
 
-function setupModelListener(state) {
-  let modelElmt = document.querySelectorAll("input[name=model]");
-  modelElmt.forEach((elmt) => {
-    elmt.addEventListener("change", (e) => {
-      updateModel(e);
-    });
-  });
-
-  function updateModel(e) {
-    let model = e.target.value;
-    console.log(model);
-    switch (model) {
-      case "tessaract":
-        state.object.name = "tessaract";
-        state.object.positions = tessaract.position;
-        state.object.colors = tessaract.colors;
-        state.object.normals = tessaract.normals;
-        break;
-      case "rubic":
-        state.object.name = "rubic";
-        state.object.positions = rubic.position;
-        state.object.colors = rubic.colors;
-        state.object.normals = rubic.normals;
-        break;
-      case "pyramid":
-        state.object.name = "pyramid";
-        state.object.positions = pyramid.position;
-        state.object.colors = pyramid.colors;
-        state.object.normals = pyramid.normals;
-        break;
-    }
-  }
-}
-
 function setupProjectionListener(state) {
   let projectionElmt = document.querySelectorAll("input[name=projection]");
   projectionElmt.forEach((elmt) => {
@@ -362,16 +368,69 @@ function setupProjectionListener(state) {
   });
 
   function updateProjection(e) {
-    let projection = e.target.value;
+    let projection  = e.target.value;
     state.projection = projection;
+    
+    let projectionMenuElmt        = document.querySelector("h3[name='projectionMenu']");
+    projectionMenuElmt.innerHTML  = projection[0].toUpperCase() + projection.slice(1);
+
+    let spaceElmt                 = document.querySelector("#space");
+    let obliqueElmt               = document.querySelector("#obliqueMenu");
+    let perspectiveElmt           = document.querySelector("#perspectiveMenu");
+    switch (projection) {
+      case "orthographic": 
+        spaceElmt.style.display       = "block";
+
+        obliqueElmt.style.display     = "none";
+        perspectiveElmt.style.display = "none";
+        break;
+      case "oblique":
+        spaceElmt.style.display       = "none";
+        
+        obliqueElmt.style.display     = "inline-block";
+        perspectiveElmt.style.display = "none";
+        break;
+      case "perspective":
+        spaceElmt.style.display       = "none";
+        
+        obliqueElmt.style.display     = "none";
+        perspectiveElmt.style.display = "inline-block"; 
+        break;
+    }
+  }
+}
+
+function setupProjectionMenuListener(state) {
+  let obliqueAngleElmt = document.querySelector("#obliqueAngle");
+  obliqueAngleElmt.addEventListener("input", (e) => {
+    updateObliqueAngle(e);
+  });
+  
+  let perspectiveFoVElmt = document.querySelector("#perspectiveFoV");
+  perspectiveFoVElmt.addEventListener("input", (e) => {
+    updatePerspectiveFoV(e);
+  });
+
+  function updateObliqueAngle(e) {
+    state.obliqueAngle                  = e.target.value;
+
+    let obliqueAngleValueElmt           = document.querySelector("#obliqueAngleValue");
+    obliqueAngleValueElmt.textContent   = e.target.value;
+  }
+
+  function updatePerspectiveFoV(e) {
+    state.perspectiveFoV                = e.target.value;
+
+    let perspectiveFoVValueElmt         = document.querySelector("#perspectiveFoVValue");
+    perspectiveFoVValueElmt.textContent = e.target.value;
   }
 }
 
 function setupTranslateListener(state) {
   // set listeners for translateX sliders
   let translateXElmt = document.querySelector("#translateX");
-  translateXElmt.min = -(Math.round(cs.width / 1000) * 1000) / 4;
-  translateXElmt.max = (Math.round(cs.width / 1000) * 1000) / 4;
+  translateXElmt.min = -(Math.round(cs.width/1000)*1000)/4;
+  translateXElmt.max = Math.round(cs.width/1000)*1000/4;
   translateXElmt.value = 0;
   translateXElmt.addEventListener("input", (e) => {
     updatePosition(0)(e, { value: e.target.value });
@@ -379,8 +438,8 @@ function setupTranslateListener(state) {
 
   // set listeners for translateY sliders
   let translateYElmt = document.querySelector("#translateY");
-  translateYElmt.min = (-Math.round(cs.height / 1000) * 1000) / 4;
-  translateYElmt.max = (Math.round(cs.height / 1000) * 1000) / 4;
+  translateYElmt.min = -Math.round(cs.height/1000)*1000/4;
+  translateYElmt.max = Math.round(cs.height/1000)*1000/4;
   translateYElmt.value = 0;
   translateYElmt.addEventListener("input", (e) => {
     updatePosition(1)(e, { value: e.target.value });
@@ -388,8 +447,8 @@ function setupTranslateListener(state) {
 
   // set listeners for translateZ sliders
   let translateZElmt = document.querySelector("#translateZ");
-  translateZElmt.min = -cs.depth / 8;
-  translateZElmt.max = cs.depth / 8;
+  translateZElmt.min = -cs.depth/8;
+  translateZElmt.max = cs.depth/8;
   translateZElmt.value = 0;
   translateZElmt.addEventListener("input", (e) => {
     updatePosition(2)(e, { value: e.target.value });
@@ -415,25 +474,25 @@ function setupTranslateListener(state) {
           translateZElmt.value = ui.value;
           break;
       }
-    };
+    }
   }
 }
 
 function setupRotationListener(state) {
   // set listeners for rotateX sliders
-  let rotateXELmt = document.querySelector("#rotateX");
+  let rotateXELmt   = document.querySelector("#rotateX");
   rotateXELmt.addEventListener("input", (e) => {
     updateRotation(0)(e, { value: e.target.value });
   });
 
   // set listeners for rotateY sliders
-  let rotateYElmt = document.querySelector("#rotateY");
+  let rotateYElmt   = document.querySelector("#rotateY");
   rotateYElmt.addEventListener("input", (e) => {
     updateRotation(1)(e, { value: e.target.value });
   });
 
   // set listeners for rotateZ sliders
-  let rotateZElmt = document.querySelector("#rotateZ");
+  let rotateZElmt   = document.querySelector("#rotateZ");
   rotateZElmt.addEventListener("input", (e) => {
     updateRotation(2)(e, { value: e.target.value });
   });
@@ -458,26 +517,25 @@ function setupRotationListener(state) {
           rotateZElmt.value = ui.value;
           break;
       }
-      // drawScene(gl, program, buffers, state);
-    };
+    }
   }
 }
 
 function setupScaleListener(state) {
   // set listeners for scaleX sliders
-  let scaleXElmt = document.querySelector("#scaleX");
+  let scaleXElmt    = document.querySelector("#scaleX");
   scaleXElmt.addEventListener("input", (e) => {
     updateScale(0)(e, { value: e.target.value });
   });
 
   // set listeners for scaleY sliders
-  let scaleYElmt = document.querySelector("#scaleY");
+  let scaleYElmt    = document.querySelector("#scaleY");
   scaleYElmt.addEventListener("input", (e) => {
     updateScale(1)(e, { value: e.target.value });
   });
 
   // set listeners for scaleZ sliders
-  let scaleZElmt = document.querySelector("#scaleZ");
+  let scaleZElmt    = document.querySelector("#scaleZ");
   scaleZElmt.addEventListener("input", (e) => {
     updateScale(2)(e, { value: e.target.value });
   });
@@ -502,8 +560,9 @@ function setupScaleListener(state) {
           scaleZElmt.value = ui.value;
           break;
       }
-    };
+    }
   }
+  
 }
 
 function setupCameraListener(state) {
@@ -518,17 +577,17 @@ function setupCameraListener(state) {
   });
 
   function updateRadius(_, ui) {
-    state.camera.radius = parseInt(ui.value);
-    let radiusValueElmt = document.querySelector("#radiusValue");
-    radiusValueElmt.textContent = ui.value;
-    radiusElmt.value = ui.value;
+    state.camera.radius   = parseInt(ui.value);
+    let radiusValueElmt               = document.querySelector("#radiusValue");
+    radiusValueElmt.textContent       = ui.value;
+    radiusElmt.value                  = ui.value;
   }
 
-  function updatAangle(_, ui) {
-    state.camera.angle = degToRad(ui.value);
-    let angleValueELmt = document.querySelector("#angleValue");
-    angleValueELmt.textContent = ui.value;
-    angleElmt.value = ui.value;
+  function updateAngle(_, ui) {
+    state.camera.angle                = degToRad(ui.value);
+    let angleValueELmt               = document.querySelector("#angleValue");
+    angleValueELmt.textContent       = ui.value;
+    angleElmt.value                  = ui.value;
   }
 }
 

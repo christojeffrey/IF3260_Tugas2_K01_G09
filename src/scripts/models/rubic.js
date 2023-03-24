@@ -17,99 +17,99 @@ let rubic = {
 const verticalPillar    = [
     // Front
     new Rectangle(
-        new Point(-152, -152,   0), new Point(-152, -140,   0),
-        new Point( -40, -140,   0), new Point( -40, -152,   0)
+        new Point(-152, -152, -152), new Point(-152, -140, -152),
+        new Point( -40, -140, -152), new Point( -40, -152, -152)
     ),
     // Back
     new Rectangle(
-        new Point( -40, -152,  12), new Point( -40, -140,  12),
-        new Point(-152, -140,  12), new Point(-152, -152,  12)
+        new Point( -40, -152, -140), new Point( -40, -140, -140),
+        new Point(-152, -140, -140), new Point(-152, -152, -140)
     ),
     // Left
     new Rectangle(
-        new Point(-152, -152,  12), new Point(-152, -140,  12),
-        new Point(-152, -140,   0), new Point(-152, -152,   0)
+        new Point(-152, -152, -140), new Point(-152, -140, -140),
+        new Point(-152, -140, -152), new Point(-152, -152, -152)
     ),
     // Right
     new Rectangle(
-        new Point( -40, -152,   0), new Point( -40, -140,   0),
-        new Point( -40, -140,  12), new Point( -40, -152,  12)
+        new Point( -40, -152, -152), new Point( -40, -140, -152),
+        new Point( -40, -140, -140), new Point( -40, -152,  -140)
     ),
     // Top
     new Rectangle(
-        new Point(-152, -152,   0), new Point( -40, -152,   0),
-        new Point( -40, -152,  12), new Point(-152, -152,  12)
+        new Point(-152, -152, -152), new Point( -40, -152, -152),
+        new Point( -40, -152, -140), new Point(-152, -152, -140)
     ),
     // Bottom
     new Rectangle(
-        new Point(-152, -140,   0), new Point(-152, -140,  12),
-        new Point( -40, -140,  12), new Point( -40, -140,   0)
+        new Point(-152, -140, -152), new Point(-152, -140, -140),
+        new Point( -40, -140, -140), new Point( -40, -140, -152)
     ),
 ];
 // Horizontal pillar
 const horizontalPillar  = [
     // Front
     new Rectangle(
-        new Point(-152, -152,   0), new Point(-152,  -40,   0),
-        new Point(-140,  -40,   0), new Point(-140, -152,   0)
+        new Point(-152, -152, -152), new Point(-152,  -40, -152),
+        new Point(-140,  -40, -152), new Point(-140, -152, -152)
     ),
     // Back
     new Rectangle(
-        new Point(-152, -152,  12), new Point(-140, -152,  12),
-        new Point(-140,  -40,  12), new Point(-152,  -40,  12)
+        new Point(-152, -152, -140), new Point(-140, -152, -140),
+        new Point(-140,  -40, -140), new Point(-152,  -40, -140)
     ),
     // Left
     new Rectangle(
-        new Point(-152, -152,   0), new Point(-152, -152,  12),
-        new Point(-152,  -40,  12), new Point(-152,  -40,   0)
+        new Point(-152, -152, -152), new Point(-152, -152, -140),
+        new Point(-152,  -40, -140), new Point(-152,  -40, -152)
     ),
     // Right
     new Rectangle(  
-        new Point(-140, -152,   0), new Point(-140,  -40,   0),
-        new Point(-140,  -40,  12), new Point(-140, -152,  12)
+        new Point(-140, -152, -152), new Point(-140,  -40, -152),
+        new Point(-140,  -40, -140), new Point(-140, -152, -140)
     ),
     // Top
     new Rectangle(
-        new Point(-152, -152,   0), new Point(-140, -152,   0),
-        new Point(-140, -152,  12), new Point(-152, -152,  12)
+        new Point(-152, -152, -152), new Point(-140, -152, -152),
+        new Point(-140, -152, -140), new Point(-152, -152, -140)
     ),
     // Bottom
     new Rectangle(
-        new Point(-152,  -40,   0), new Point(-152,  -40,  12),
-        new Point(-140,  -40,  12), new Point(-140,  -40,   0)
+        new Point(-152,  -40, -152), new Point(-152,  -40, -140),
+        new Point(-140,  -40, -140), new Point(-140,  -40, -152)
     ),
 ];
 // Depth pillar
 const depthPillar       = [
     // Front
     new Rectangle(
-        new Point(-152, -152,   0), new Point(-152, -140,   0),
-        new Point(-140, -140,   0), new Point(-140, -152,   0)
+        new Point(-152, -152, -152), new Point(-152, -140, -152),
+        new Point(-140, -140, -152), new Point(-140, -152, -152)
     ),
     // Back
     new Rectangle(
-        new Point(-152, -152, 112), new Point(-140, -152, 112),
-        new Point(-140, -140, 112), new Point(-152, -140, 112)
+        new Point(-152, -152,  -40), new Point(-140, -152,  -40),
+        new Point(-140, -140,  -40), new Point(-152, -140,  -40)
     ),
     // Left
     new Rectangle(
-        new Point(-152, -152,   0), new Point(-152, -152, 112),
-        new Point(-152, -140, 112), new Point(-152, -140,   0)
+        new Point(-152, -152, -152), new Point(-152, -152,  -40),
+        new Point(-152, -140,  -40), new Point(-152, -140, -152)
     ),
     // Right
     new Rectangle(  
-        new Point(-140, -152,   0), new Point(-140, -140,   0),
-        new Point(-140, -140, 112), new Point(-140, -152, 112)
+        new Point(-140, -152, -152), new Point(-140, -140, -152),
+        new Point(-140, -140,  -40), new Point(-140, -152,  -40)
     ),
     // Top
     new Rectangle(
-        new Point(-152, -152,   0), new Point(-140, -152,   0),
-        new Point(-140, -152, 112), new Point(-152, -152, 112)
+        new Point(-152, -152, -152), new Point(-140, -152, -152),
+        new Point(-140, -152,  -40), new Point(-152, -152,  -40)
     ),
     // Bottom
     new Rectangle(
-        new Point(-152, -140,   0), new Point(-152, -140, 112),
-        new Point(-140, -140, 112), new Point(-140, -140,   0)
+        new Point(-152, -140, -152), new Point(-152, -140,  -40),
+        new Point(-140, -140,  -40), new Point(-140, -140, -152)
     ),
 ];
 

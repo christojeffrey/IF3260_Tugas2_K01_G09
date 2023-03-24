@@ -89,20 +89,31 @@ function drawScene(gl, program, buffers, state) {
     gl.vertexAttribPointer(normalLocation, size, type, normalize, stride, offset);
   
     // Compute the matrices
-    console.log(state.projection)
-    let matrixProjection  = m4.projection(camera.radius, 15, state.projection);
+    let matrixProjection  = m4.projection(camera.radius, state.obliqueAngle, state.perspectiveFoV, state.projection);
     let matrixTransform   = m4.transform(translation, rotation, scale);
-    let matrixView        = m4.view(camera.angle, camera.radius);
+    
+    let cameraView        = m4.view(camera.angle, camera.radius);
 
+    let center            = [0, 0, 0]
+    let cameraPosition    = [cameraView[12], cameraView[13], cameraView[14]];
+    let up                = [0, 1, 0];
+
+    let matrixView        = m4.lookAt(cameraPosition, center, up);
+    
+    matrixView            = m4.inverse(matrixView);
+    
     let matrix            = m4.multiply(m4.multiply(matrixProjection, matrixTransform), matrixView)
     let world             = m4.multiply(m4.multiply(matrixProjection, matrixView), matrixTransform);
+    
+    world                 = m4.inverse(world);
+    world                 = m4.transpose(world);
 
     // Set the matrix.
     gl.uniformMatrix4fv(matrixLocation, false, matrix);
     gl.uniformMatrix4fv(worldLocation, false, world);
 
     // Set the light direction (in the world space)
-    var lightDirection = [2, 10, 10];
+    const lightDirection  = [2, 10, 10];
     gl.uniform3fv(reverseLightDirectionLocation, v3.normalize(lightDirection));
     
     // Set the lighting to true or false

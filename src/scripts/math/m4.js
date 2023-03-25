@@ -84,16 +84,20 @@ export const m4 = {
     return camera;
   },
 
-  transform(translation, rotation, scale) {
+  transform(translation, rotation, scale, center = [0, 0, 0]) {
     let x      = translation[0]; let y      = translation[1]; let z      = translation[2];
     let angleX =    rotation[0]; let angleY =    rotation[1]; let angleZ =    rotation[2];
     let scaleX =       scale[0]; let scaleY =       scale[1]; let scaleZ =       scale[2];
 
+    let translateToOrigin   = m4.translation(center[0], center[1], center[2]);
+    let translateFromOrigin = m4.translation(0-center[0], 0-center[1], 0-center[2]);
 
     let m = m4.identity();
+    m     = m4.multiply(m, translateToOrigin);
     m     = m4.translate(m, x, y, z);
-    m     = m4.rotate(m, angleX, angleY, angleZ);
+    m     = m4.rotate(m, angleX, angleY, angleZ); 
     m     = m4.scale(m, scaleX, scaleY, scaleZ);
+    m     = m4.multiply(m, translateFromOrigin);
 
     return m;
   },
@@ -139,6 +143,21 @@ export const m4 = {
         b30 * a01 + b31 * a11 + b32 * a21 + b33 * a31,
         b30 * a02 + b31 * a12 + b32 * a22 + b33 * a32,
         b30 * a03 + b31 * a13 + b32 * a23 + b33 * a33,
+    ];
+  },
+
+  multiplyWithV3: function(m, v) {
+    let m00 = m[0 * 4 + 0], m01 = m[0 * 4 + 1], m02 = m[0 * 4 + 2], m03 = m[0 * 4 + 3];
+    let m10 = m[1 * 4 + 0], m11 = m[1 * 4 + 1], m12 = m[1 * 4 + 2], m13 = m[1 * 4 + 3];
+    let m20 = m[2 * 4 + 0], m21 = m[2 * 4 + 1], m22 = m[2 * 4 + 2], m23 = m[2 * 4 + 3];
+    let m30 = m[3 * 4 + 0], m31 = m[3 * 4 + 1], m32 = m[3 * 4 + 2], m33 = m[3 * 4 + 3];
+
+    let v0 = v[0], v1 = v[1], v2 = v[2], v3 = 1;
+    return [
+      v0 * m00 + v1 * m10 + v2 * m20 + v3 * m30,
+      v0 * m01 + v1 * m11 + v2 * m21 + v3 * m31,
+      v0 * m02 + v1 * m12 + v2 * m22 + v3 * m32,
+      v0 * m03 + v1 * m13 + v2 * m23 + v3 * m33,
     ];
   },
 
@@ -233,7 +252,7 @@ export const m4 = {
     let x = m4.xRotation(angleXInRadians);
     let y = m4.yRotation(angleYInRadians);
     let z = m4.zRotation(angleZInRadians);
-    return m4.multiply(m4.multiply(x, y), z);
+    return m4.multiply(m4.multiply(z, y), x);
   },
 
   scaling: function (sx, sy, sz) {

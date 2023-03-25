@@ -10,8 +10,8 @@ function renderScene(gl, program, state) {
         if (state.animate) {
             animate(state);
         }
-        let { positions, colors, normals } = state.object;
-        let buffers = initBuffers(gl, positions, colors, normals);
+        let { position, color, normal } = state.object;
+        let buffers = initBuffers(gl, position, color, normal);
         drawScene(gl, program, buffers, state);
         requestAnimationFrame(render);
     }
@@ -21,14 +21,14 @@ function renderScene(gl, program, state) {
 function drawScene(gl, program, buffers, state) {
     // Clear the canvas.
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-    const { scale, rotation, translation, camera }        = state;
-    const { positionBuffer, colorBuffer, normalBuffer }   = buffers;
+    const { scale, rotation, translation, camera, object }        = state;
+    const { positionBuffer, colorBuffer, normalBuffer }           = buffers;
     // look up where the vertex data needs to go.
     var positionLocation              = gl.getAttribLocation(program, "a_position");
     var colorLocation                 = gl.getAttribLocation(program, "a_color");
     var normalLocation                = gl.getAttribLocation(program, "a_normal");
     // lookup uniforms
-    var matrixLocation                = gl.getUniformLocation(program, "u_matrix");
+    var worldViewProjectionLocation   = gl.getUniformLocation(program, "u_worldViewProjection");
     var worldLocation                 = gl.getUniformLocation(program, "u_world");
     var reverseLightDirectionLocation = gl.getUniformLocation(program, "u_reverseLightDirection");
     var useLightingLocation           = gl.getUniformLocation(program, "u_useLighting");
@@ -89,31 +89,31 @@ function drawScene(gl, program, buffers, state) {
     gl.vertexAttribPointer(normalLocation, size, type, normalize, stride, offset);
   
     // Compute the matrices
-    let matrixProjection  = m4.projection(camera.radius, state.obliqueAngle, state.perspectiveFoV, state.projection);
-    let matrixTransform   = m4.transform(translation, rotation, scale);
+    let projectionMatrix  = m4.projection(camera.radius, state.obliqueAngle, state.perspectiveFoV, state.projection);
+    let transformMatrix   = m4.transform(translation, rotation, scale, object.center);
     
     let cameraView        = m4.view(camera.angle, camera.radius);
 
-    let center            = [0, 0, 0]
+    let target            = [0, 0, 0];
     let cameraPosition    = [cameraView[12], cameraView[13], cameraView[14]];
     let up                = [0, 1, 0];
 
-    let matrixView        = m4.lookAt(cameraPosition, center, up);
+    let viewMatrix        = m4.lookAt(cameraPosition, target, up);
+    viewMatrix            = m4.inverse(viewMatrix);
     
-    matrixView            = m4.inverse(matrixView);
-    
-    let matrix            = m4.multiply(m4.multiply(matrixProjection, matrixTransform), matrixView)
-    let world             = m4.multiply(m4.multiply(matrixProjection, matrixView), matrixTransform);
-    
-    world                 = m4.inverse(world);
-    world                 = m4.transpose(world);
+    let viewProjectionMatrix          = m4.multiply(projectionMatrix, viewMatrix);
+
+    let worldViewProjectionMatrix     = m4.multiply(viewProjectionMatrix, transformMatrix);
+
+    let worldMatrix                   = m4.inverse(transformMatrix);
+    worldMatrix                       = m4.transpose(worldMatrix);
 
     // Set the matrix.
-    gl.uniformMatrix4fv(matrixLocation, false, matrix);
-    gl.uniformMatrix4fv(worldLocation, false, world);
+    gl.uniformMatrix4fv(worldViewProjectionLocation, false, worldViewProjectionMatrix);
+    gl.uniformMatrix4fv(worldLocation, false, worldMatrix);
 
     // Set the light direction (in the world space)
-    const lightDirection  = [2, 10, 10];
+    const lightDirection  = [-10, -10, 50];
     gl.uniform3fv(reverseLightDirectionLocation, v3.normalize(lightDirection));
     
     // Set the lighting to true or false

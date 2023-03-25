@@ -4,6 +4,7 @@ import { v3 } from "../math/v3.js";
 import { m4 } from "../math/m4.js";
 import { tessaract, rubic, pyramid } from "../models/model.js";
 
+let state;
 function setupUI(gl) {
   let object = {
     name: "rubic",
@@ -38,7 +39,7 @@ function setupUI(gl) {
     animate,
   };
 
-  let state = {
+  state = {
     object: {
       name: defaultState.object.name,
       position: defaultState.object.position,

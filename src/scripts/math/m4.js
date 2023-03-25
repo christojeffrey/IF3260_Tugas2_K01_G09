@@ -84,7 +84,7 @@ export const m4 = {
     return camera;
   },
 
-  transform(translation, rotation, scale, center = [0, 0, 0]) {
+  transform(translation, rotation, scale, center) {
     let x      = translation[0]; let y      = translation[1]; let z      = translation[2];
     let angleX =    rotation[0]; let angleY =    rotation[1]; let angleZ =    rotation[2];
     let scaleX =       scale[0]; let scaleY =       scale[1]; let scaleZ =       scale[2];

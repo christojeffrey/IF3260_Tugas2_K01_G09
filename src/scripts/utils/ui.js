@@ -188,7 +188,7 @@ function setupFileListener(state, defaultState) {
     let transformedPosition = [];
     for (let i = 0; i < state.object.position.length; i += 3) {
       let vec = v3.create(state.object.position[i], state.object.position[i + 1], state.object.position[i + 2]);
-      let transformedVec = m4.multiplyWithV3(m4.transform(state.translation, state.rotation, state.scale), vec);
+      let transformedVec = m4.multiplyWithV3(m4.transform(state.translation, state.rotation, state.scale, state.object.center), vec);
       transformedVec = transformedVec.slice(0, 3);
       transformedPosition = [...transformedPosition, Math.round(transformedVec[0]), Math.round(transformedVec[1]), Math.round(transformedVec[2])];
     }

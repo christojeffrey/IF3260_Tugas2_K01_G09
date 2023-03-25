@@ -5,6 +5,8 @@ import { m4 } from "../math/m4.js";
 import { tessaract, rubic, pyramid } from "../models/model.js";
 
 let state;
+let defaultState;
+
 function setupUI(gl) {
   let object = {
     name: "rubic",
@@ -25,7 +27,7 @@ function setupUI(gl) {
   let shading = true;
   let animate = false;
 
-  let defaultState = {
+  defaultState = {
     object,
     totalVertices,
     projection,
@@ -133,6 +135,9 @@ function setupFileListener(state, defaultState) {
   exportElmt.addEventListener("click", exportData);
 
   function importData() {
+    // based on spec, seems like we should turn this off. canvas won't be reseted on import
+    // resetCanvas();
+
     let file = this.files[0];
     let reader = new FileReader();
     reader.onload = function (e) {
@@ -260,105 +265,104 @@ function setupCanvasListener(state, defaultState) {
     state.object.center = [];
     state.totalVertices = 0;
   }
+}
+function resetCanvas() {
+  state.object = {
+    name: defaultState.object.name,
+    position: defaultState.object.position,
+    color: defaultState.object.color,
+    normal: defaultState.object.normal,
+    center: defaultState.object.center,
+  };
+  state.totalVertices = defaultState.totalVertices;
+  state.projection = defaultState.projection;
+  state.obliqueAngle = defaultState.obliqueAngle;
+  state.perspectiveFoV = defaultState.perspectiveFoV;
+  state.rotation = [...defaultState.rotation];
+  state.translation = [...defaultState.translation];
+  state.scale = [...defaultState.scale];
+  state.camera = {
+    radius: defaultState.camera.radius,
+    angle: defaultState.camera.angle,
+  };
+  state.shading = defaultState.shading;
+  state.animate = defaultState.animate;
 
-  function resetCanvas() {
-    state.object = {
-      name: defaultState.object.name,
-      position: defaultState.object.position,
-      color: defaultState.object.color,
-      normal: defaultState.object.normal,
-      center: defaultState.object.center,
-    };
-    state.totalVertices = defaultState.totalVertices;
-    state.projection = defaultState.projection;
-    state.obliqueAngle = defaultState.obliqueAngle;
-    state.perspectiveFoV = defaultState.perspectiveFoV;
-    state.rotation = [...defaultState.rotation];
-    state.translation = [...defaultState.translation];
-    state.scale = [...defaultState.scale];
-    state.camera = {
-      radius: defaultState.camera.radius,
-      angle: defaultState.camera.angle,
-    };
-    state.shading = defaultState.shading;
-    state.animate = defaultState.animate;
-
-    let modelElmt = document.querySelectorAll("input[name=model]");
-    for (let i = 0; i < modelElmt.length; i++) {
-      if (modelElmt[i].value == state.object.name) {
-        modelElmt[i].checked = true;
-        break;
-      }
+  let modelElmt = document.querySelectorAll("input[name=model]");
+  for (let i = 0; i < modelElmt.length; i++) {
+    if (modelElmt[i].value == state.object.name) {
+      modelElmt[i].checked = true;
+      break;
     }
-
-    let projectionElmt = document.querySelectorAll("input[name='projection']");
-    for (let i = 0; i < projectionElmt.length; i++) {
-      if (projectionElmt[i].value == state.projection) {
-        projectionElmt[i].checked = true;
-        break;
-      }
-    }
-
-    let translateXElmt = document.querySelector("#translateX");
-    translateXElmt.value = state.translation[0];
-    let translateYElmt = document.querySelector("#translateY");
-    translateYElmt.value = state.translation[1];
-    let translateZElmt = document.querySelector("#translateZ");
-    translateZElmt.value = state.translation[2];
-
-    let translateXValueELmt = document.querySelector("#translateXValue");
-    translateXValueELmt.textContent = state.translation[0];
-    let translateYValueELmt = document.querySelector("#translateYValue");
-    translateYValueELmt.textContent = state.translation[1];
-    let translateZValueELmt = document.querySelector("#translateZValue");
-    translateZValueELmt.textContent = state.translation[2];
-
-    let rotateXElmt = document.querySelector("#rotateX");
-    rotateXElmt.value = state.rotation[0];
-    let rotateYElmt = document.querySelector("#rotateY");
-    rotateYElmt.value = state.rotation[1];
-    let rotateZElmt = document.querySelector("#rotateZ");
-    rotateZElmt.value = state.rotation[2];
-
-    let rotateXValueELmt = document.querySelector("#rotateXValue");
-    rotateXValueELmt.textContent = state.rotation[0];
-    let rotateYValueELmt = document.querySelector("#rotateYValue");
-    rotateYValueELmt.textContent = state.rotation[1];
-    let rotateZValueELmt = document.querySelector("#rotateZValue");
-    rotateZValueELmt.textContent = state.rotation[2];
-
-    let scaleXElmt = document.querySelector("#scaleX");
-    scaleXElmt.value = state.scale[0];
-    let scaleYElmt = document.querySelector("#scaleY");
-    scaleYElmt.value = state.scale[1];
-    let scaleZElmt = document.querySelector("#scaleZ");
-    scaleZElmt.value = state.scale[2];
-
-    let scaleXValueELmt = document.querySelector("#scaleXValue");
-    scaleXValueELmt.textContent = state.scale[0];
-    let scaleYValueELmt = document.querySelector("#scaleYValue");
-    scaleYValueELmt.textContent = state.scale[1];
-    let scaleZValueELmt = document.querySelector("#scaleZValue");
-    scaleZValueELmt.textContent = state.scale[2];
-
-    let radiusElmt = document.querySelector("#radius");
-    radiusElmt.value = state.camera.radius;
-
-    let radiusValueElmt = document.querySelector("#radiusValue");
-    radiusValueElmt.textContent = state.camera.radius;
-
-    let angleElmt = document.querySelector("#angle");
-    angleElmt.value = state.camera.angle;
-
-    let angleValueElmt = document.querySelector("#angleValue");
-    angleValueElmt.textContent = state.camera.angle;
-
-    let animateElmt = document.querySelector("#animate");
-    animateElmt.checked = state.animate;
-
-    let shadingElmt = document.querySelector("#shading");
-    shadingElmt.checked = state.shading;
   }
+
+  let projectionElmt = document.querySelectorAll("input[name='projection']");
+  for (let i = 0; i < projectionElmt.length; i++) {
+    if (projectionElmt[i].value == state.projection) {
+      projectionElmt[i].checked = true;
+      break;
+    }
+  }
+
+  let translateXElmt = document.querySelector("#translateX");
+  translateXElmt.value = state.translation[0];
+  let translateYElmt = document.querySelector("#translateY");
+  translateYElmt.value = state.translation[1];
+  let translateZElmt = document.querySelector("#translateZ");
+  translateZElmt.value = state.translation[2];
+
+  let translateXValueELmt = document.querySelector("#translateXValue");
+  translateXValueELmt.textContent = state.translation[0];
+  let translateYValueELmt = document.querySelector("#translateYValue");
+  translateYValueELmt.textContent = state.translation[1];
+  let translateZValueELmt = document.querySelector("#translateZValue");
+  translateZValueELmt.textContent = state.translation[2];
+
+  let rotateXElmt = document.querySelector("#rotateX");
+  rotateXElmt.value = state.rotation[0];
+  let rotateYElmt = document.querySelector("#rotateY");
+  rotateYElmt.value = state.rotation[1];
+  let rotateZElmt = document.querySelector("#rotateZ");
+  rotateZElmt.value = state.rotation[2];
+
+  let rotateXValueELmt = document.querySelector("#rotateXValue");
+  rotateXValueELmt.textContent = state.rotation[0];
+  let rotateYValueELmt = document.querySelector("#rotateYValue");
+  rotateYValueELmt.textContent = state.rotation[1];
+  let rotateZValueELmt = document.querySelector("#rotateZValue");
+  rotateZValueELmt.textContent = state.rotation[2];
+
+  let scaleXElmt = document.querySelector("#scaleX");
+  scaleXElmt.value = state.scale[0];
+  let scaleYElmt = document.querySelector("#scaleY");
+  scaleYElmt.value = state.scale[1];
+  let scaleZElmt = document.querySelector("#scaleZ");
+  scaleZElmt.value = state.scale[2];
+
+  let scaleXValueELmt = document.querySelector("#scaleXValue");
+  scaleXValueELmt.textContent = state.scale[0];
+  let scaleYValueELmt = document.querySelector("#scaleYValue");
+  scaleYValueELmt.textContent = state.scale[1];
+  let scaleZValueELmt = document.querySelector("#scaleZValue");
+  scaleZValueELmt.textContent = state.scale[2];
+
+  let radiusElmt = document.querySelector("#radius");
+  radiusElmt.value = state.camera.radius;
+
+  let radiusValueElmt = document.querySelector("#radiusValue");
+  radiusValueElmt.textContent = state.camera.radius;
+
+  let angleElmt = document.querySelector("#angle");
+  angleElmt.value = state.camera.angle;
+
+  let angleValueElmt = document.querySelector("#angleValue");
+  angleValueElmt.textContent = state.camera.angle;
+
+  let animateElmt = document.querySelector("#animate");
+  animateElmt.checked = state.animate;
+
+  let shadingElmt = document.querySelector("#shading");
+  shadingElmt.checked = state.shading;
 }
 
 function setupAnimationListener(state) {
